@@ -3,24 +3,27 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
+import { LandingPageComponent } from './layouts/landing-page/landing-page.component';
 import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
-import { ErrorPageComponent } from './error-page/error-page.component';
-import { NavbarComponent } from './navbar/navbar.component';
+import { ErrorPageComponent } from './layouts/error-page/error-page.component';
+import { NavbarComponent } from './layouts/navbar/navbar.component';
+import { MainComponent } from './layouts/main/main.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
-    AppComponent,
     LandingPageComponent,
     PokemonListComponent,
     ErrorPageComponent,
-    NavbarComponent
+    NavbarComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgbModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [MainComponent]
 })
 export class AppModule { }
