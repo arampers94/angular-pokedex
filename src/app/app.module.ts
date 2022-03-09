@@ -8,19 +8,22 @@ import { ErrorPageComponent } from './layouts/error-page/error-page.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { MainComponent } from './layouts/main/main.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PokemonDetailComponent } from './pokemon-detail/pokemon-detail.component';
+import { LandingPageModule } from './layouts/landing-page/landing-page.module';
 
 @NgModule({
   declarations: [
-    LandingPageComponent,
     PokemonListComponent,
     ErrorPageComponent,
     NavbarComponent,
-    MainComponent
+    MainComponent,
+    PokemonDetailComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    LandingPageModule
   ],
   providers: [],
   bootstrap: [MainComponent]

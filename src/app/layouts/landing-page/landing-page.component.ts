@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-landing-page',
@@ -6,10 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
+  pokemonName = '';
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
+  search(): void {
+    if (this.pokemonName === '') {
+      alert('Input can not be blank');
+    } else {
+      this.pokemonName = this.pokemonName.trim().toLowerCase();
+      this.router.navigate([`/pokemon-detail/${this.pokemonName}`]);
+    }
+  }
 }
