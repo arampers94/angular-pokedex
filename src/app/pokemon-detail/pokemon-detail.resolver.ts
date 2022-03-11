@@ -4,28 +4,18 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router';
 import { Pokemon } from 'pokenode-ts';
-import { EMPTY, mergeMap, Observable, of } from 'rxjs';
-import { ERROR } from '../app.constants';
+import { Observable } from 'rxjs';
 import { PokedexService } from '../shared/services/pokedex.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PokemonDetailResolver implements Resolve<string | Pokemon> {
+export class PokemonDetailResolver implements Resolve<Pokemon> {
   constructor(private pokedexService: PokedexService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<string | Pokemon> | Observable<never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Pokemon> | Observable<never> {
     const pokemonName = route.params['pokemonName'];
 
-    return this.pokedexService.getPokemonByName(pokemonName).pipe(
-      mergeMap(data => {
-        if (data !== ERROR) {
-          return of(data);
-        } else {
-          this.router.navigate(['404']);
-          return EMPTY;
-        }
-      })
-    )
+    return this.pokedexService.getPokemonByName(pokemonName);
   }
 }
