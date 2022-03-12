@@ -1,9 +1,7 @@
-import { error } from '@angular/compiler/src/util';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApexAxisChartSeries, ApexChart, ApexLegend, ApexPlotOptions, ApexTitleSubtitle, ApexTooltip, ApexXAxis } from 'ng-apexcharts';
-import { Ability, Genus, Pokemon, PokemonSpecies, PokemonSpeciesDexEntry, VerboseEffect } from 'pokenode-ts';
-import { forkJoin, Observable } from 'rxjs';
+import { PokemonDetail } from '../shared/models/pokemon-detail.model';
 import { PokedexService } from '../shared/services/pokedex.service';
 
 type ChartOptions = {
@@ -23,30 +21,20 @@ type ChartOptions = {
   styleUrls: ['./pokemon-detail.component.scss']
 })
 export class PokemonDetailComponent implements OnInit {
-  pokemon?: Pokemon;
-  pokemonSpeciesData?: PokemonSpecies;
+  pokemonDetail = new PokemonDetail();
   chartOptions: Partial<ChartOptions>;
-  stats: number[] = [];
-  flavorText = '';
-  genus?: Genus;
-  entry?: PokemonSpeciesDexEntry;
-  evolvesFrom = '';
-  abilityDescriptions: VerboseEffect[] = [];
 
   constructor(private route: ActivatedRoute, protected pokedexService: PokedexService) {
     this.route.data.subscribe(data => {
-      this.pokemon = data['pokemonDetail'];
-
-      this.pokemon?.stats.forEach(stat => {
-        this.stats.push(stat.base_stat);
-      })
+      this.pokemonDetail = data['pokemonDetail'];
+      console.log(this.pokemonDetail.pokemon?.name)
     });
 
     this.chartOptions = {
       series: [
         {
           name: 'Pokemon Stat Series',
-          data: this.stats
+          data: this.pokemonDetail.stats!
         }
       ],
       chart: {
@@ -88,38 +76,7 @@ export class PokemonDetailComponent implements OnInit {
     }
    }
 
-  ngOnInit(): void {
-    this.pokedexService.getPokemonBySpeciesName(this.pokemon?.name!).subscribe(res => {
-      let requests: Observable<Ability>[] = [];
-
-      if (res) {
-        this.pokemonSpeciesData = res;
-        this.flavorText = this.pokemonSpeciesData.flavor_text_entries[2].flavor_text.replace('\f', ' ');
-        this.genus = this.pokemonSpeciesData.genera.find(item => {
-          return item.language.name === "en";
-        });
-
-        this.entry = this.pokemonSpeciesData.pokedex_numbers.find(item => {
-          return item.pokedex.name === "national";
-        });
-
-        this.evolvesFrom = 'Evolves from ' + (this.pokemonSpeciesData.evolves_from_species !== null ? this.pokemonSpeciesData.evolves_from_species.name : 'nothing');
-      }
-
-      this.pokemon?.abilities.forEach(ability => {
-        requests.push(this.pokedexService.getAbilityByName(ability.ability.name));
-      });
-
-      forkJoin(requests).subscribe(resp => {
-        if (resp) {
-          resp.forEach(ability => {
-            let effect: VerboseEffect | undefined = ability.effect_entries.find(item => {
-              return item.language.name === "en";
-            });
-            this.abilityDescriptions?.push(effect!)
-          });
-        }
-      });
-    });
-  } 
+  ngOnInit(): void { 
+   
+  }
 }

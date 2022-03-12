@@ -9,6 +9,7 @@ export interface IPokemonDetail {
     pokemonSpeciesDexEntry?: PokemonSpeciesDexEntry;
     evolvesFrom?: string;
     verboseEffects?: VerboseEffect[];
+    entryNumber?: number;
 }
 
 export class PokemonDetail implements IPokemonDetail {
@@ -20,6 +21,7 @@ export class PokemonDetail implements IPokemonDetail {
         public genus?: Genus,
         public pokemonSpeciesDexEntry?: PokemonSpeciesDexEntry,
         public evolvesFrom?: string,
-        public verboseEffects?: VerboseEffect[]
+        public verboseEffects?: VerboseEffect[],
+        public entryNumber?: number
     ) {}
 }

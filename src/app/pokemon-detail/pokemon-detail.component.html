@@ -1,35 +1,35 @@
-<div *ngIf="pokemon" class="row detail-container">
+<div *ngIf="pokemonDetail.pokemon && pokemonDetail.pokemonSpecies" class="row detail-container">
     <div class="col detail-card">
         <div class="row detail-wrapper">
             <div class="row">
                 <div class="col-6 pokemon-image">
-                    <img [src]="pokemon.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
+                    <img [src]="pokemonDetail.pokemon.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
                 </div>
                 <div class="col-6 pokemon-name-type">
-                    <h4>{{ pokemon!.name }}</h4>
+                    <h4>{{ pokemonDetail.pokemon.name }}</h4>
                     <div class="d-inline-flex">
                         <div class="flex-row">
-                            <span class="list-item" *ngFor="let type of pokemon.types; let isLast=last">
+                            <span class="list-item" *ngFor="let type of pokemonDetail.pokemon.types; let isLast=last">
                                 {{ type.type.name + (!isLast ? ',' : '') }}
                             </span>
                         </div>
                         <div class="divider">{{ '|' }}</div>
-                        <p *ngIf="entry">
-                            #{{ entry.entry_number }}
+                        <p>
+                            #{{ pokemonDetail.entryNumber }}
                         </p>
                     </div>
-                    <div *ngIf="pokemonSpeciesData">
-                        <p>{{ evolvesFrom }}</p>
+                    <div>
+                        <p>{{ pokemonDetail.evolvesFrom }}</p>
                     </div>
                 </div>
             </div>
 
             <section class="entry-section">
                 <div class="col section-title">
-                    <h6 *ngIf="genus">{{ genus.genus }}</h6>
+                    <h6 *ngIf="pokemonDetail.genus">{{ pokemonDetail.genus.genus }}</h6>
                 </div>
                 <div class="col section-content">
-                    <div>{{ flavorText }}</div>
+                    <div>{{ pokemonDetail.flavorText }}</div>
                 </div>
             </section>
 
@@ -38,11 +38,11 @@
                     <h6>Abilities</h6>
                 </div>
                 <div class="col section-content">
-                    <div *ngFor="let ability of pokemon.abilities; let index=index; let isLast=last">
+                    <div *ngFor="let ability of pokemonDetail.pokemon.abilities; let index=index; let isLast=last">
                         <span 
                             class="list-item" 
                             triggers="mouseenter:mouseleave"
-                            [ngbPopover]="abilityDescriptions[index].effect" 
+                            [ngbPopover]="pokemonDetail.verboseEffects![index].effect" 
                         >
                             {{ ability.ability.name + (ability.is_hidden ? ' (Hidden)' : '') + (!isLast ? ',' : '') }}
                         </span>
@@ -50,9 +50,9 @@
                 </div>
             </section>
 
-            <section class="entry-section stat-chart">
+            <section *ngIf="chartOptions && pokemonDetail.stats" class="entry-section stat-chart">
                 <apx-chart
-                    [series]="chartOptions.series!"
+                    [series]="[{ name: 'Pokemon stat series', data: pokemonDetail.stats }]"
                     [chart]="chartOptions.chart!"
                     [xaxis]="chartOptions.xaxis!"
                     [title]="chartOptions.title!"
@@ -69,15 +69,15 @@
                 </div>
                 <div class="col-12 section-content">
                     <div class="col grid-block">
-                        <p>{{ pokemon.height / 10 }}m</p>
+                        <p>{{ pokemonDetail.pokemon.height / 10 }}m</p>
                         <h6>Height</h6>
                     </div>
                     <div class="col grid-block">
-                        <p>{{ pokemon.weight / 10 }}kg.</p>
+                        <p>{{ pokemonDetail.pokemon.weight / 10 }}kg.</p>
                         <h6>Weight</h6>
                     </div>
                     <div class="col grid-block" id="last-col">
-                        <p>{{ pokemon.base_experience }}</p>
+                        <p>{{ pokemonDetail.pokemon.base_experience }}</p>
                         <h6>Base Exp.</h6>
                     </div>
                 </div>
