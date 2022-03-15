@@ -1,26 +1,26 @@
 <div *ngIf="pokemonDetail.pokemon && pokemonDetail.pokemonSpecies" class="row detail-container">
     <div class="col detail-card">
         <div class="row detail-wrapper">
-            <div class="row">
+            <div class="row pb-3">
                 <div class="col-6 pokemon-image">
                     <img [src]="pokemonDetail.pokemon.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
                 </div>
-                <div class="col-6 pokemon-name-type">
-                    <h4>{{ pokemonDetail.pokemon.name }}</h4>
-                    <div class="d-inline-flex">
-                        <div class="flex-row">
-                            <span class="list-item" *ngFor="let type of pokemonDetail.pokemon.types; let isLast=last">
-                                {{ type.type.name + (!isLast ? ',' : '') }}
-                            </span>
+                <div class="col-6">
+                    <div class="pokemon-name-type">
+                        <h4>{{ pokemonDetail.pokemon.name }}</h4>
+                        <div class="d-inline-flex">
+                            <div class="flex-row">
+                                <span class="list-item" *ngFor="let type of pokemonDetail.pokemon.types; let isLast=last">
+                                    {{ type.type.name + (!isLast ? ',' : '') }}
+                                </span>
+                            </div>
+                            <div class="divider">{{ '|' }}</div>
+                            <p>
+                                #{{ pokemonDetail.entryNumber }}
+                            </p>
                         </div>
-                        <div class="divider">{{ '|' }}</div>
-                        <p>
-                            #{{ pokemonDetail.entryNumber }}
-                        </p>
                     </div>
-                    <div>
-                        <p>{{ pokemonDetail.evolvesFrom }}</p>
-                    </div>
+                    <ng-container *ngIf="pokemonDetail.evolvesFrom !== NOTHING; then showLink; else nothing"></ng-container>
                 </div>
             </div>
 
@@ -37,14 +37,14 @@
                 <div class="col section-title">
                     <h6>Abilities</h6>
                 </div>
-                <div class="col section-content">
+                <div class="col section-content" *ngIf="pokemonDetail.verboseEffects">
                     <div *ngFor="let ability of pokemonDetail.pokemon.abilities; let index=index; let isLast=last">
                         <span 
                             class="list-item" 
                             triggers="mouseenter:mouseleave"
-                            [ngbPopover]="pokemonDetail.verboseEffects![index].effect" 
+                            [ngbPopover]="pokemonDetail.verboseEffects[index] ? pokemonDetail.verboseEffects[index].effect : noAbilityInfo" 
                         >
-                            {{ ability.ability.name + (ability.is_hidden ? ' (Hidden)' : '') + (!isLast ? ',' : '') }}
+                            {{ formatName(ability.ability.name) + (ability.is_hidden ? ' (Hidden)' : '') + (!isLast ? ',' : '') }}
                         </span>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
             </section>
 
             <section class="entry-section">
-                <div class="col section-title">
+                <div class="col section-title pb-3">
                     <h6>Physical Traits</h6>
                 </div>
                 <div class="col-12 section-content">
@@ -82,6 +82,49 @@
                     </div>
                 </div>
             </section>
+
+            <section *ngIf="pokemonDetail.types" class="entry-section">
+                <div class="col section-title pb-2">
+                    <h6>Damage Taken from Type</h6>
+                </div>
+                <div class="row">
+                    <div class="row" style="max-width: 50%;" *ngFor="let damageTypeTaken of calculateDamageTaken(pokemonDetail.types)">
+                        <div class="col-6">
+                            <div style="text-transform: capitalize;">
+                                {{ damageTypeTaken.name }}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            {{ damageTypeTaken.multiplier }}x
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="entry-section">
+                <div class="col section-title">
+                    <h6>Move Set</h6>
+                </div>
+                <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
+                    <ngb-panel (shown)="fetchMoveData(move.move.name)" *ngFor="let move of pokemonDetail.pokemon.moves; let index=index">
+                        <ng-template ngbPanelTitle>{{ formatName(move.move.name) }}</ng-template>
+                        <ng-template *ngIf="moveData && moveData.name === move.move.name" ngbPanelContent>
+                            {{ moveDescription }}
+                        </ng-template>
+                    </ngb-panel>
+                </ngb-accordion>
+            </section>
         </div>
     </div>
 </div>
+
+<ng-template #showLink>
+    <div *ngIf="pokemonDetail.evolvesFrom !== NOTHING">
+        Evolves from 
+        <a class="link-styles" [routerLink]="['/pokemon-detail', pokemonDetail.evolvesFrom]">{{ pokemonDetail.evolvesFrom }}</a>
+    </div>
+</ng-template>
+
+<ng-template #nothing>
+    <div style="font-size: 13px; text-align: center;">Doesn't evolve from anything</div>
+</ng-template>

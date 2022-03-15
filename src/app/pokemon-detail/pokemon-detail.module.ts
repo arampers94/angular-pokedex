@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { PokemonDetailComponent } from './pokemon-detail.component';
 import { PokemonDetailResolver } from './pokemon-detail.resolver';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 const ROUTES = [
   {
@@ -27,7 +27,8 @@ const ROUTES = [
     CommonModule,
     RouterModule.forChild(ROUTES),
     NgApexchartsModule,
-    NgbPopoverModule
+    NgbPopoverModule,
+    NgbAccordionModule
   ]
 })
 export class PokemonDetailModule { }

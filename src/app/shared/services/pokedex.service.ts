@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Ability, PokemonClient, PokemonSpecies } from "pokenode-ts";
+import { Ability, Move, MoveClient, PokemonClient, PokemonSpecies, Type } from "pokenode-ts";
 import { Observable, from, of, catchError, forkJoin, mergeMap, map } from 'rxjs';
 import { Pokemon } from "pokenode-ts";
 import { Router } from '@angular/router';
@@ -9,14 +9,15 @@ import { PokemonDetail } from '../models/pokemon-detail.model';
   providedIn: 'root'
 })
 export class PokedexService {
-  api = new PokemonClient();
+  pokemonClient = new PokemonClient();
+  moveClient = new MoveClient();
 
   constructor(private router: Router) { }
 
   async getPokemonDetail(pokemonName: string): Promise<PokemonDetail> {
     let pokemonDetail = new PokemonDetail();
 
-    let abilities$ = this.getPokemonByName(pokemonName).pipe(
+    let pokemon$ = this.getPokemonByName(pokemonName).pipe(
       map(pokemon => {
         pokemonDetail.pokemon = pokemon;
         pokemonDetail.stats = pokemon.stats.map(stat => stat.base_stat);
@@ -24,24 +25,33 @@ export class PokedexService {
       }),
       mergeMap(pokemon => 
         forkJoin(
-          pokemon.abilities.map(ability => this.getAbilityByName(ability.ability.name))
+          [
+            forkJoin(
+              pokemon.abilities.map(ability => this.getAbilityByName(ability.ability.name))
+            ),
+            forkJoin(
+              pokemon.types.map(type =>  this.getTypeByName(type.type.name))
+            )
+          ]
         )
       )
     )
 
     let pokemonSpecies$ = this.getPokemonBySpeciesName(pokemonName);
 
-    await forkJoin([abilities$, pokemonSpecies$]).subscribe(data => {
-      let abilities = data[0];
+    await forkJoin([pokemon$, pokemonSpecies$]).subscribe(data => {
+      let abilities = data[0][0];
+      let types = data[0][1];
       let pokemonSpecies = data[1];
 
       pokemonDetail.pokemonSpecies = pokemonSpecies;
-      pokemonDetail.flavorText = pokemonSpecies.flavor_text_entries[2].flavor_text.replace('\f', ' ');
+      pokemonDetail.flavorText = pokemonSpecies.flavor_text_entries.find(item => { return item.language.name === "en" })?.flavor_text.replace('\f', ' ');
       pokemonDetail.genus = pokemonSpecies.genera.find(item => { return item.language.name === "en" });
       pokemonDetail.pokemonSpeciesDexEntry = pokemonSpecies.pokedex_numbers.find(item => { return item.pokedex.name === "national" });
-      pokemonDetail.evolvesFrom = 'Evolves from ' + (pokemonSpecies.evolves_from_species !== null ? pokemonSpecies.evolves_from_species.name : 'nothing');
+      pokemonDetail.evolvesFrom = pokemonSpecies.evolves_from_species !== null ? pokemonSpecies.evolves_from_species.name : 'nothing';
       pokemonDetail.verboseEffects = abilities.map(ability => ability.effect_entries.find(item => { return item.language.name === "en" })!);
       pokemonDetail.entryNumber = pokemonSpecies.pokedex_numbers.find(item => item.pokedex.name === "national")?.entry_number;
+      pokemonDetail.types = types;
     })
 
     return pokemonDetail;
@@ -49,7 +59,7 @@ export class PokedexService {
 
   private getPokemonByName(pokemonName: string): Observable<Pokemon> {
     return from(
-      this.api.getPokemonByName(pokemonName).then(data => {
+      this.pokemonClient.getPokemonByName(pokemonName).then(data => {
         return data;
       })
     )
@@ -63,7 +73,7 @@ export class PokedexService {
 
   private getPokemonBySpeciesName(pokemonName: string): Observable<PokemonSpecies> {
     return from(
-      this.api.getPokemonSpeciesByName(pokemonName).then(data => {
+      this.pokemonClient.getPokemonSpeciesByName(pokemonName).then(data => {
         return data;
       })
     )
@@ -77,7 +87,23 @@ export class PokedexService {
 
   private getAbilityByName(abilityName: string): Observable<Ability> {
     return from(
-      this.api.getAbilityByName(abilityName).then(data => {
+      this.pokemonClient.getAbilityByName(abilityName).then(data => {
+        return data;
+      })
+    )
+  }
+
+  private getTypeByName(typeName: string): Observable<Type> {
+    return from(
+      this.pokemonClient.getTypeByName(typeName).then(data => {
+        return data;
+      })
+    )
+  }
+
+  public getMoveByName(moveName: string): Observable<Move> {
+    return from(
+      this.moveClient.getMoveByName(moveName).then(data => {
         return data;
       })
     )

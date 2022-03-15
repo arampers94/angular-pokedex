@@ -1,4 +1,4 @@
-import { Genus, Pokemon, PokemonSpecies, PokemonSpeciesDexEntry, VerboseEffect } from "pokenode-ts";
+import { Genus, Pokemon, PokemonSpecies, PokemonSpeciesDexEntry, Type, VerboseEffect } from "pokenode-ts";
 
 export interface IPokemonDetail {
     pokemon?: Pokemon;
@@ -10,6 +10,7 @@ export interface IPokemonDetail {
     evolvesFrom?: string;
     verboseEffects?: VerboseEffect[];
     entryNumber?: number;
+    types?: Type[];
 }
 
 export class PokemonDetail implements IPokemonDetail {
@@ -22,6 +23,7 @@ export class PokemonDetail implements IPokemonDetail {
         public pokemonSpeciesDexEntry?: PokemonSpeciesDexEntry,
         public evolvesFrom?: string,
         public verboseEffects?: VerboseEffect[],
-        public entryNumber?: number
+        public entryNumber?: number,
+        public types?: Type[]
     ) {}
 }
