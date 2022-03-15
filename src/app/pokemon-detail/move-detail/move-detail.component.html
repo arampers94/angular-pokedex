@@ -1,1 +1,25 @@
-<p>move-detail works!</p>
+<div class="move-detail-wrapper">
+    <div class="row pb-2">
+        <div *ngIf="moveData.type" class="col-3 move-detail-subtitle">Type: {{ moveData.type.name }}</div>
+        <div class="col-3 move-detail-subtitle">Power: {{ moveData.power ? moveData.power : '-' }}</div>
+        <div class="col-3 move-detail-subtitle">Acc: {{ moveData.accuracy ? moveData.accuracy : '-' }}</div>
+        <div class="col-3 move-detail-subtitle">PP: {{ moveData.pp }}</div>
+    </div>
+    <div class="row pb-2">
+        <div class="col-12 pb-1 move-detail-subtitle">
+            Description:
+        </div>
+        <div class="col-12">
+            {{ moveDescription }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 pb-1 move-detail-subtitle">
+            Effect:
+        </div>
+        <div class="col-12">
+             {{ moveShortEffect }}
+        </div>
+    </div>
+</div>
+   

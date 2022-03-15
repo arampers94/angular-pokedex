@@ -1,5 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApexAxisChartSeries, ApexChart, ApexLegend, ApexPlotOptions, ApexTitleSubtitle, ApexTooltip, ApexXAxis } from 'ng-apexcharts';
 import { Type } from 'pokenode-ts';
 import { NOTHING } from '../app.constants';
@@ -39,9 +40,8 @@ export class PokemonDetailComponent implements OnInit {
   NOTHING = NOTHING;
   noAbilityInfo = 'No information currently available for this ability.';
   moveData = new Move();
-  moveDescription: string | undefined = '';
 
-  constructor(private route: ActivatedRoute, protected pokedexService: PokedexService) {
+  constructor(private route: ActivatedRoute, protected pokedexService: PokedexService, private modalService: NgbModal) {
     this.route.data.subscribe(data => {
       this.pokemonDetail = data['pokemonDetail'];
       // TODO - erase console log
@@ -102,6 +102,14 @@ export class PokemonDetailComponent implements OnInit {
     return finalResult;
   }
 
+  fetchMoveData(moveName: string): void {
+    if (moveName !== this.moveData.name) {
+      this.pokedexService.getMoveByName(moveName).subscribe(data => {
+        this.moveData = data;
+      })
+    }
+  }
+
   formatName(move: string): string {
     let moveArray = move.replace('-', ' ').split(" ");
 
@@ -112,17 +120,8 @@ export class PokemonDetailComponent implements OnInit {
     return moveArray.join(" ");
   }
 
-  fetchMoveData(moveName: string): void {
-    if (moveName !== this.moveData.name) {
-      this.pokedexService.getMoveByName(moveName).subscribe(data => {
-        this.moveData = data;
-        this.moveDescription = this.moveData.flavor_text_entries?.find(item => { return item.language.name === "en" })?.flavor_text;
-      })
-    }
-  }
-
-  removeDescription(): void {
-    this.moveDescription = '';
+  showMoveListModal(content: any): void {
+    this.modalService.open(content, { centered: true, scrollable: true })
   }
 
   createChartOptions(): ChartOptions {

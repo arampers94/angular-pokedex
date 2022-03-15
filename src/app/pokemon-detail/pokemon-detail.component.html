@@ -106,13 +106,21 @@
                     <h6>Move Set</h6>
                 </div>
                 <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
-                    <ngb-panel (shown)="fetchMoveData(move.move.name)" *ngFor="let move of pokemonDetail.pokemon.moves; let index=index">
+                    <ngb-panel (shown)="fetchMoveData(move.move.name)" *ngFor="let move of pokemonDetail.pokemon.moves | slice:0:5; let index=index">
                         <ng-template ngbPanelTitle>{{ formatName(move.move.name) }}</ng-template>
                         <ng-template *ngIf="moveData && moveData.name === move.move.name" ngbPanelContent>
-                            {{ moveDescription }}
+                            <app-move-detail 
+                                [pokemonDetail]="pokemonDetail" 
+                                [moveName]="formatName(move.move.name)" 
+                                [moveData]="moveData"
+                            >
+                            </app-move-detail>
                         </ng-template>
                     </ngb-panel>
                 </ngb-accordion>
+                <div class="col-12 pt-3">
+                    <button class="btn btn-info" (click)="showMoveListModal(moveListModal)">View all moves</button>
+                </div>
             </section>
         </div>
     </div>
@@ -127,4 +135,29 @@
 
 <ng-template #nothing>
     <div style="font-size: 13px; text-align: center;">Doesn't evolve from anything</div>
+</ng-template>
+
+<ng-template #moveListModal let-modal>
+    <div class="modal-header">
+        <h5 *ngIf="pokemonDetail.pokemon" class="modal-title">Moves that {{ pokemonDetail.pokemon.name }} can learn</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div *ngIf="moveData && pokemonDetail.pokemon" class="modal-body" style="background-color: #343a40;">
+        <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
+            <ngb-panel (shown)="fetchMoveData(move.move.name)" *ngFor="let move of pokemonDetail.pokemon.moves; let index=index">
+                <ng-template ngbPanelTitle>{{ formatName(move.move.name) }}</ng-template>
+                <ng-template *ngIf="moveData && moveData.name === move.move.name" ngbPanelContent>
+                    <app-move-detail 
+                        [pokemonDetail]="pokemonDetail" 
+                        [moveName]="formatName(move.move.name)"
+                        [moveData]="moveData"
+                    >
+                    </app-move-detail>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close()">Close</button>
+    </div>
 </ng-template>

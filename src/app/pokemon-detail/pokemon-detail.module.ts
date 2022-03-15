@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { PokemonDetailComponent } from './pokemon-detail.component';
 import { PokemonDetailResolver } from './pokemon-detail.resolver';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { NgbAccordionModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbModalModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { MoveDetailComponent } from './move-detail/move-detail.component';
 
 const ROUTES = [
@@ -29,7 +29,8 @@ const ROUTES = [
     RouterModule.forChild(ROUTES),
     NgApexchartsModule,
     NgbPopoverModule,
-    NgbAccordionModule
+    NgbAccordionModule,
+    NgbModalModule
   ]
 })
 export class PokemonDetailModule { }
