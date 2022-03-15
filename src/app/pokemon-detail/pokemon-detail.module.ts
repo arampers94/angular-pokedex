@@ -5,6 +5,7 @@ import { PokemonDetailComponent } from './pokemon-detail.component';
 import { PokemonDetailResolver } from './pokemon-detail.resolver';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgbAccordionModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { MoveDetailComponent } from './move-detail/move-detail.component';
 
 const ROUTES = [
   {
@@ -22,7 +23,7 @@ const ROUTES = [
 
 
 @NgModule({
-  declarations: [PokemonDetailComponent],
+  declarations: [PokemonDetailComponent, MoveDetailComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
