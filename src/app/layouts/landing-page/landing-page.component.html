@@ -17,10 +17,11 @@
                             type="text"
                             class="form-control"
                             placeholder="ex: Pikachu"
+                            (keypress)="search($event)"
                             [(ngModel)]="pokemonName"
                         />
                     </div>
-                    <button class="btn btn-danger pr-2" (click)="search()">Search</button>
+                    <button class="btn btn-danger" style="margin-right: 5px;" (click)="search()">Search</button>
                     <button class="btn btn-dark" routerLink="/pokedex">View full Pokédex</button>
                 </div>
             </div>

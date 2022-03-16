@@ -14,7 +14,9 @@ export class LandingPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  search(): void {
+  search(event?: KeyboardEvent): void {
+    if (event && event.key !== "Enter") return;
+    
     if (this.pokemonName === '') {
       alert('Input can not be blank');
     } else {
