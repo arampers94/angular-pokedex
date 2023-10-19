@@ -1,6 +1,9 @@
 import { Action, createReducer, on } from "@ngrx/store";
 import { State, initialState } from "./state";
-import { 
+import {
+  getPokemon,
+  getPokemonSuccess,
+  getPokemonFailure,
   getPokemonSpecies, 
   getPokemonSpeciesSuccess,
   getPokemonSpeciesFailure,
@@ -10,6 +13,20 @@ export const pokemonFeatureKey = 'pokemon';
 
 export const pokemonReducer = createReducer(
   initialState,
+  on(getPokemon, (state) => ({
+    ...state,
+    getPokemonLoading: true,
+  })),
+  on(getPokemonSuccess, (state, { pokemon }) => ({
+    ...state,
+    getPokemonLoading: false,
+    pokemon
+  })),
+  on(getPokemonFailure, (state, error) => ({
+    ...state,
+    getPokemonLoading: false,
+    getPokemonFailure: error
+  })),
   on(getPokemonSpecies, (state) => ({
     ...state,
     getPokemonSpeciesLoading: true,
