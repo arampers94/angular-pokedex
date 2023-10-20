@@ -1,22 +1,22 @@
-<div *ngIf="pokemonDetail.pokemon && pokemonDetail.pokemonSpecies" class="row detail-container">
+<div *ngIf="pokemonDetail && (pokemonDetail$ | async) as pokemon" class="row detail-container">
     <div class="col detail-card">
         <div class="row detail-wrapper">
             <div class="row pb-3">
                 <div class="col-6 pokemon-image">
-                    <img [src]="pokemonDetail.pokemon.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
+                    <img [src]="pokemon[0]?.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
                 </div>
                 <div class="col-6">
                     <div class="pokemon-name-type">
-                        <h4>{{ pokemonDetail.pokemon.name }}</h4>
+                        <h4>{{ pokemon[0]?.name }}</h4>
                         <div class="d-inline-flex">
                             <div class="flex-row">
-                                <span class="list-item" *ngFor="let type of pokemonDetail.pokemon.types; let isLast=last">
+                                <span class="list-item" *ngFor="let type of pokemon[0]?.types; let isLast=last">
                                     {{ type.type.name + (!isLast ? ',' : '') }}
                                 </span>
                             </div>
                             <div class="divider">{{ '|' }}</div>
                             <p>
-                                #{{ pokemonDetail.entryNumber }}
+                                #{{ pokemon[1]?.entryNumber }}
                             </p>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                     <h6>Abilities</h6>
                 </div>
                 <div class="col section-content" *ngIf="pokemonDetail.verboseEffects">
-                    <div *ngFor="let ability of pokemonDetail.pokemon.abilities; let index=index; let isLast=last">
+                    <div *ngFor="let ability of pokemon[0]?.abilities; let index=index; let isLast=last">
                         <span 
                             class="list-item" 
                             triggers="mouseenter:mouseleave"
@@ -69,15 +69,15 @@
                 </div>
                 <div class="col-12 section-content">
                     <div class="col grid-block">
-                        <p>{{ pokemonDetail.pokemon.height / 10 }}m</p>
+                        <p>{{ pokemon[0]?.height / 10 }}m</p>
                         <h6>Height</h6>
                     </div>
                     <div class="col grid-block">
-                        <p>{{ pokemonDetail.pokemon.weight / 10 }}kg.</p>
+                        <p>{{ pokemon[0]?.weight / 10 }}kg.</p>
                         <h6>Weight</h6>
                     </div>
                     <div class="col grid-block" id="last-col">
-                        <p>{{ pokemonDetail.pokemon.base_experience }}</p>
+                        <p>{{ pokemon[0]?.base_experience }}</p>
                         <h6>Base Exp.</h6>
                     </div>
                 </div>
@@ -105,8 +105,8 @@
                 <div class="col section-title">
                     <h6>Move Set</h6>
                 </div>
-                <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
-                    <ngb-panel (shown)="fetchMoveData(move.move.name)" *ngFor="let move of pokemonDetail.pokemon.moves | slice:0:5; let index=index">
+                <!-- <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
+                    <ngb-panel (shown)="fetchMoveData(move.move.name)" *ngFor="let move of pokemon.moves | slice:0:5; let index=index">
                         <ng-template ngbPanelTitle>{{ formatName(move.move.name) }}</ng-template>
                         <ng-template *ngIf="moveData && moveData.name === move.move.name" ngbPanelContent>
                             <app-move-detail 
@@ -117,7 +117,7 @@
                             </app-move-detail>
                         </ng-template>
                     </ngb-panel>
-                </ngb-accordion>
+                </ngb-accordion> -->
                 <div class="col-12 pt-3">
                     <button class="btn btn-info" (click)="showMoveListModal(moveListModal)">View all moves</button>
                 </div>

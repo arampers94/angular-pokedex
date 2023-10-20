@@ -1,12 +1,24 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApexAxisChartSeries, ApexChart, ApexLegend, ApexPlotOptions, ApexTitleSubtitle, ApexTooltip, ApexXAxis } from 'ng-apexcharts';
-import { Type } from 'pokenode-ts';
+import { 
+  ApexAxisChartSeries, 
+  ApexChart, 
+  ApexLegend, 
+  ApexPlotOptions, 
+  ApexTitleSubtitle, 
+  ApexTooltip, 
+  ApexXAxis,
+} from 'ng-apexcharts';
+import { Pokemon, PokemonSpecies, Type } from 'pokenode-ts';
 import { NOTHING } from '../app.constants';
 import { Move } from '../shared/models/move.model';
 import { PokemonDetail } from '../shared/models/pokemon-detail.model';
 import { PokedexService } from '../shared/services/pokedex.service';
+import { Actions } from '@ngrx/effects';
+import { Observable, Subject, combineLatest, map, merge, of } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { PokemonActions, PokemonSelectors } from '../store/pokemon';
 
 type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -34,25 +46,72 @@ class DamageTaken {
   templateUrl: './pokemon-detail.component.html',
   styleUrls: ['./pokemon-detail.component.scss']
 })
-export class PokemonDetailComponent implements OnInit {
+export class PokemonDetailComponent implements OnInit, OnDestroy {
   pokemonDetail = new PokemonDetail();
   chartOptions: Partial<ChartOptions>;
   NOTHING = NOTHING;
   noAbilityInfo = 'No information currently available for this ability.';
   moveData = new Move();
+  public pokemon$: Observable<Pokemon | null> = of(null)
+  public pokemonLoading$: Observable<boolean>;
+  public pokemonSpecies$: Observable<PokemonSpecies | null> = of(null);
+  public pokemonSpeciesLoading$: Observable<boolean>;
+  public pokemonDetail$?: Observable<any>;
 
-  constructor(private route: ActivatedRoute, protected pokedexService: PokedexService, private modalService: NgbModal) {
+  private destroyed$ = new Subject<boolean>;
+
+  constructor(
+    private route: ActivatedRoute, 
+    protected pokedexService: PokedexService, 
+    private modalService: NgbModal,
+    private actions$: Actions,
+    private store$: Store,
+    ) {
     this.route.data.subscribe(data => {
       this.pokemonDetail = data['pokemonDetail'];
       // TODO - erase console log
-      console.log(data['pokemonDetail'])
+      // console.log(data['pokemonDetail'])
+      
+    });
+
+    this.route.params.subscribe(params => {
+      const pokemonName = params['pokemonName'];
+
+      this.store$.dispatch(
+        PokemonActions.getPokemon({ pokemonName })
+      );
+
+      this.store$.dispatch(
+        PokemonActions.getPokemonSpecies({ pokemonName })
+      );
     });
 
     this.chartOptions = this.createChartOptions();
+
+    this.pokemonLoading$ =
+      this.store$.select(
+        PokemonSelectors.selectGetPokemonLoading
+      );
+
+    this.pokemonSpeciesLoading$ = 
+      this.store$.select(
+        PokemonSelectors.selectGetPokemonSpeciesLoading
+      );
+    
+    this.pokemon$ = this.store$.select(PokemonSelectors.selectPokemon);
+    this.pokemonSpecies$ = this.store$.select(PokemonSelectors.selectPokemonSpecies)
   }
 
   ngOnInit(): void { 
-    
+    combineLatest([this.pokemon$, this.pokemonSpecies$])
+    .pipe(
+      map(([pokemon, pokemonSpecies]) => {
+        this.pokemonDetail.flavorText = pokemonSpecies?.flavor_text_entries.find(item => { return item.language.name === "en" })?.flavor_text.replace('\f', ' ');
+        this.pokemonDetail.genus = pokemonSpecies?.genera.find(item => { return item.language.name === "en" });
+        this.pokemonDetail.entryNumber = pokemonSpecies?.pokedex_numbers.find(item => item.pokedex.name === "national")?.entry_number;
+        this.pokemonDetail.evolvesFrom = pokemonSpecies?.evolves_from_species !== null ? pokemonSpecies?.evolves_from_species.name : 'nothing';
+      })
+    )
   }
 
   calculateDamageTaken(types: Type[] | null): DamageTaken[] {
@@ -169,5 +228,10 @@ export class PokemonDetailComponent implements OnInit {
       },
       colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#81D4FA']
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

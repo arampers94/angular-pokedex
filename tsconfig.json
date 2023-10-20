@@ -23,9 +23,9 @@
       "dom"
     ],
     "useDefineForClassFields": false,
-    "paths": {
-      "tslib" : ["./node_modules/tslib/tslib.d.ts"]
-    },
+    // "paths": {
+    //   "tslib" : ["./node_modules/tslib/tslib.d.ts"]
+    // },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
