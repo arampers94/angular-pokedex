@@ -1,0 +1,68 @@
+%container {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.pokemon-list-container {
+  margin: 70px 0;
+}
+
+.sidebar {
+  @extend %container;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  background-color: #343a40;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.region-title {
+  padding: 10px 10px 0 0;
+  margin: 0 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.region-item {
+  background-color: #343a40;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.main-content {
+  @extend %container;
+}
+
+.pokemon-list-grid {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  background-color: #343a40;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+}
+
+.pokemon-list-title {
+  width: 100%;
+  margin: 15px 24px;
+}
+
+.pokemon-list-image {
+  height: 100px;
+  width: 100px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.transparent-overlay {
+  position: absolute;
+  z-index: 1;
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0);
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.09);
+  }
+}

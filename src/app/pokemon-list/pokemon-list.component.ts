@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./pokemon-list.component.scss']
 })
 export class PokemonListComponent implements OnInit {
+  regionName = '';
 
   constructor() { }
 
