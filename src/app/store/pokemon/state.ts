@@ -1,4 +1,4 @@
-import { Pokemon, PokemonSpecies } from "pokenode-ts"
+import { Ability, Pokemon, PokemonSpecies } from "pokenode-ts"
 
 export interface State {
   pokemon: Pokemon | null;
@@ -7,6 +7,9 @@ export interface State {
   pokemonSpecies: PokemonSpecies | null;
   getPokemonSpeciesLoading: boolean;
   getPokemonSpeciesFailure: any;
+  abilities: Ability[];
+  getAbilityLoading: boolean;
+  getAbilityFailure: any;
 }
 
 export const initialState: State = {
@@ -16,4 +19,7 @@ export const initialState: State = {
   pokemonSpecies: null,
   getPokemonSpeciesLoading: false,
   getPokemonSpeciesFailure: null,
+  abilities: [],
+  getAbilityLoading: false,
+  getAbilityFailure: null,
 }

@@ -7,6 +7,9 @@ import {
   getPokemonSpecies, 
   getPokemonSpeciesSuccess,
   getPokemonSpeciesFailure,
+  getAbility,
+  getAbilitySuccess,
+  getAbilityFailure,
  } from "./actions";
 
 export const pokemonFeatureKey = 'pokemon';
@@ -40,6 +43,20 @@ export const pokemonReducer = createReducer(
     ...state,
     getPokemonSpeciesLoading: false,
     getPokemonSpeciesFailure: error
+  })),
+  on(getAbility, (state) => ({
+    ...state,
+    getAbilityLoading: true,
+  })),
+  on(getAbilitySuccess, (state, { ability }) => ({
+    ...state,
+    getAbilityLoading: false,
+    abilities: [...state.abilities, ability]
+  })),
+  on(getAbilityFailure, (state, error) => ({
+    ...state,
+    getAbilityLoading: false,
+    getAbilityFailure: error
   })),
 );
 

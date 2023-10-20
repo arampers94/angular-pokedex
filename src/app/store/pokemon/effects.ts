@@ -8,6 +8,9 @@ import {
   getPokemonSpecies,
   getPokemonSpeciesSuccess,
   getPokemonSpeciesFailure,
+  getAbility,
+  getAbilitySuccess,
+  getAbilityFailure,
  } from "./actions";
 import { catchError, map, of, switchMap } from "rxjs";
 
@@ -40,6 +43,20 @@ export class PokemonEffects {
       )
     )
   );
+
+  getAbility$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(getAbility),
+    switchMap((action) =>
+      this.pokemonService
+        .getAbilityByName(action.abilityName)
+        .pipe(
+          map(ability => getAbilitySuccess({ ability })),
+          catchError(error => of(getAbilityFailure(error)))
+      )
+    )
+  )
+);
 
   constructor(private actions$: Actions, private pokemonService: PokemonService) {}
 }
