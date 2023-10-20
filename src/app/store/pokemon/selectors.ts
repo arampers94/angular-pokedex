@@ -1,4 +1,4 @@
-import { Ability, Pokemon, PokemonSpecies } from "pokenode-ts";
+import { Ability, Pokemon, PokemonSpecies, Type } from "pokenode-ts";
 import { State } from "./state";
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { pokemonFeatureKey } from "./reducer";
@@ -21,6 +21,12 @@ const getAbilityLoading = (state: State): boolean =>
   state.getAbilityLoading;
 const getAbilityFailure = (state: State): any =>
   state.getAbilityFailure;
+const getTypes = (state: State): Type[] =>
+  state.types;
+const getTypeLoading = (state: State): boolean =>
+  state.getTypeLoading;
+const getTypeFailure = (state: State): any =>
+  state.getTypeFailure;
 
 export const pokemonState = createFeatureSelector<State>(
   pokemonFeatureKey
@@ -69,4 +75,19 @@ export const selectGetAbilityLoading = createSelector(
 export const selectGetAbilityFailure = createSelector(
   pokemonState,
   getAbilityFailure
+);
+
+export const selectGetTypes = createSelector(
+  pokemonState,
+  getTypes
+);
+
+export const selectGetTypeLoading = createSelector(
+  pokemonState,
+  getTypeLoading
+);
+
+export const selectGetTypeFailure = createSelector(
+  pokemonState,
+  getTypeFailure
 );

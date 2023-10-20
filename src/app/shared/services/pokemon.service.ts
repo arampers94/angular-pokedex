@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Ability, Pokemon, PokemonClient, PokemonSpecies } from "pokenode-ts";
+import { Ability, Pokemon, PokemonClient, PokemonSpecies, Type } from "pokenode-ts";
 import { Observable, from } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -16,5 +16,9 @@ export class PokemonService {
 
   public getAbilityByName(abilityName: string): Observable<Ability> {
     return from(this.pokemonClient.getAbilityByName(abilityName));
+  }
+
+  public getTypeByName(typeName: string): Observable<Type> {
+    return from(this.pokemonClient.getTypeByName(typeName));
   }
 }

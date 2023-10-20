@@ -11,8 +11,11 @@ import {
   getAbility,
   getAbilitySuccess,
   getAbilityFailure,
+  getType,
+  getTypeSuccess,
+  getTypeFailure,
  } from "./actions";
-import { catchError, map, of, switchMap } from "rxjs";
+import { catchError, map, mergeMap, of, switchMap } from "rxjs";
 
 @Injectable()
 export class PokemonEffects {
@@ -45,18 +48,32 @@ export class PokemonEffects {
   );
 
   getAbility$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(getAbility),
-    switchMap((action) =>
-      this.pokemonService
-        .getAbilityByName(action.abilityName)
-        .pipe(
-          map(ability => getAbilitySuccess({ ability })),
-          catchError(error => of(getAbilityFailure(error)))
+    this.actions$.pipe(
+      ofType(getAbility),
+      mergeMap((action) =>
+        this.pokemonService
+          .getAbilityByName(action.abilityName)
+          .pipe(
+            map(ability => getAbilitySuccess({ ability })),
+            catchError(error => of(getAbilityFailure(error)))
+        )
       )
     )
-  )
-);
+  );
+
+  getType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getType),
+      mergeMap((action) =>
+        this.pokemonService
+          .getTypeByName(action.typeName)
+          .pipe(
+            map(pokemonType => getTypeSuccess({ pokemonType })),
+            catchError(error => of(getTypeFailure(error)))
+        )
+      )
+    )
+  );
 
   constructor(private actions$: Actions, private pokemonService: PokemonService) {}
 }

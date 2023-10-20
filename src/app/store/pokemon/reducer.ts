@@ -10,6 +10,9 @@ import {
   getAbility,
   getAbilitySuccess,
   getAbilityFailure,
+  getType,
+  getTypeSuccess,
+  getTypeFailure,
  } from "./actions";
 
 export const pokemonFeatureKey = 'pokemon';
@@ -57,6 +60,20 @@ export const pokemonReducer = createReducer(
     ...state,
     getAbilityLoading: false,
     getAbilityFailure: error
+  })),
+  on(getType, (state) => ({
+    ...state,
+    getTypeLoading: true,
+  })),
+  on(getTypeSuccess, (state, { pokemonType }) => ({
+    ...state,
+    getTypeLoading: false,
+    types: [...state.types, pokemonType]
+  })),
+  on(getTypeFailure, (state, error) => ({
+    ...state,
+    getTypeLoading: false,
+    getTypeFailure: error
   })),
 );
 
