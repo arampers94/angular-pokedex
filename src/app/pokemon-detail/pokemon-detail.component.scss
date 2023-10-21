@@ -84,7 +84,7 @@
   text-transform: capitalize;
 }
 
-ngb-accordion {
+div {
   ::ng-deep {
     div.accordion-item {
       background-color: #292929 !important;
@@ -93,7 +93,7 @@ ngb-accordion {
       color: rgba(255, 255, 255, 0.8);
 
       ::ng-deep {
-        div.accordion-header {
+        h2.accordion-header {
           ::ng-deep {
             button.accordion-button {
               background-color: #343a40 !important;

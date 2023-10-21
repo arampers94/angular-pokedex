@@ -1,22 +1,22 @@
-<div *ngIf="pokemonDetail && (pokemonDetail$ | async) as pokemon" class="row detail-container">
+<div *ngIf="pokemonDetail && (pokemon$ | async) as pokemon" class="row detail-container">
     <div class="col detail-card">
         <div class="row detail-wrapper">
             <div class="row pb-3">
                 <div class="col-6 pokemon-image">
-                    <img [src]="pokemon[0]?.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
+                    <img [src]="pokemon.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
                 </div>
                 <div class="col-6">
                     <div class="pokemon-name-type">
-                        <h4>{{ pokemon[0]?.name }}</h4>
+                        <h4>{{ pokemon.name }}</h4>
                         <div class="d-inline-flex">
                             <div class="flex-row">
-                                <span class="list-item" *ngFor="let type of pokemon[0]?.types; let isLast=last">
+                                <span class="list-item" *ngFor="let type of pokemon.types; let isLast=last">
                                     {{ type.type.name + (!isLast ? ',' : '') }}
                                 </span>
                             </div>
                             <div class="divider">{{ '|' }}</div>
                             <p>
-                                #{{ pokemon[1]?.entryNumber }}
+                                #{{ pokemonDetail.entryNumber }}
                             </p>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                     <h6>Abilities</h6>
                 </div>
                 <div class="col section-content" *ngIf="pokemonDetail.verboseEffects">
-                    <div *ngFor="let ability of pokemon[0]?.abilities; let index=index; let isLast=last">
+                    <div *ngFor="let ability of pokemon.abilities; let index=index; let isLast=last">
                         <span 
                             class="list-item" 
                             triggers="mouseenter:mouseleave"
@@ -69,15 +69,15 @@
                 </div>
                 <div class="col-12 section-content">
                     <div class="col grid-block">
-                        <p>{{ pokemon[0]?.height / 10 }}m</p>
+                        <p>{{ pokemon.height / 10 }}m</p>
                         <h6>Height</h6>
                     </div>
                     <div class="col grid-block">
-                        <p>{{ pokemon[0]?.weight / 10 }}kg.</p>
+                        <p>{{ pokemon.weight / 10 }}kg.</p>
                         <h6>Weight</h6>
                     </div>
                     <div class="col grid-block" id="last-col">
-                        <p>{{ pokemon[0]?.base_experience }}</p>
+                        <p>{{ pokemon.base_experience }}</p>
                         <h6>Base Exp.</h6>
                     </div>
                 </div>
@@ -105,19 +105,20 @@
                 <div class="col section-title">
                     <h6>Move Set</h6>
                 </div>
-                <!-- <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
-                    <ngb-panel (shown)="fetchMoveData(move.move.name)" *ngFor="let move of pokemon.moves | slice:0:5; let index=index">
-                        <ng-template ngbPanelTitle>{{ formatName(move.move.name) }}</ng-template>
-                        <ng-template *ngIf="moveData && moveData.name === move.move.name" ngbPanelContent>
-                            <app-move-detail 
-                                [pokemonDetail]="pokemonDetail" 
-                                [moveName]="formatName(move.move.name)" 
-                                [moveData]="moveData"
-                            >
-                            </app-move-detail>
-                        </ng-template>
-                    </ngb-panel>
-                </ngb-accordion> -->
+                <div ngbAccordion [closeOthers]="true">
+                    <div [ngbAccordionItem]="'move' + index" [destroyOnHide]="false" (shown)="fetchMoveData(index, move.move.name)" *ngFor="let move of pokemon.moves | slice:0:5; let index=index">
+                        <h2 ngbAccordionHeader>
+                            <button ngbAccordionButton>{{ formatName(move.move.name) }}</button>
+                        </h2>
+                        <div ngbAccordionCollapse>
+                            <div ngbAccordionBody>
+                                <ng-template>
+                                    <app-move-detail [id]="index" [moveName]="move.move.name" #moveDetail></app-move-detail>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-12 pt-3">
                     <button class="btn btn-info" (click)="showMoveListModal(moveListModal)">View all moves</button>
                 </div>
@@ -138,21 +139,16 @@
 </ng-template>
 
 <ng-template #moveListModal let-modal>
-    <div class="modal-header">
+    <div class="modal-header" >
         <h5 *ngIf="pokemonDetail.pokemon" class="modal-title">Moves that {{ pokemonDetail.pokemon.name }} can learn</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div *ngIf="moveData && pokemonDetail.pokemon" class="modal-body" style="background-color: #343a40;">
         <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
-            <ngb-panel (shown)="fetchMoveData(move.move.name)" *ngFor="let move of pokemonDetail.pokemon.moves; let index=index">
+            <ngb-panel (shown)="fetchMoveData(index, move.move.name)" *ngFor="let move of (pokemon$ | async)?.moves; let index=index">
                 <ng-template ngbPanelTitle>{{ formatName(move.move.name) }}</ng-template>
                 <ng-template *ngIf="moveData && moveData.name === move.move.name" ngbPanelContent>
-                    <app-move-detail 
-                        [pokemonDetail]="pokemonDetail" 
-                        [moveName]="formatName(move.move.name)"
-                        [moveData]="moveData"
-                    >
-                    </app-move-detail>
+                    <app-move-detail></app-move-detail>
                 </ng-template>
             </ngb-panel>
         </ngb-accordion>

@@ -1,4 +1,4 @@
-<div class="move-detail-wrapper">
+<div *ngIf="moveData" class="move-detail-wrapper">
     <div class="row pb-2">
         <div *ngIf="moveData.type" class="col-3 move-detail-subtitle">Type: {{ moveData.type.name }}</div>
         <div class="col-3 move-detail-subtitle">Power: {{ moveData.power ? moveData.power : '-' }}</div>

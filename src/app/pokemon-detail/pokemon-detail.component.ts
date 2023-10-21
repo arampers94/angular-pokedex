@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { 
@@ -10,15 +10,16 @@ import {
   ApexTooltip, 
   ApexXAxis,
 } from 'ng-apexcharts';
-import { Pokemon, PokemonSpecies, Type } from 'pokenode-ts';
+import { Ability, Pokemon, PokemonSpecies, Type } from 'pokenode-ts';
 import { NOTHING } from '../app.constants';
 import { Move } from '../shared/models/move.model';
 import { PokemonDetail } from '../shared/models/pokemon-detail.model';
 import { PokedexService } from '../shared/services/pokedex.service';
-import { Actions } from '@ngrx/effects';
-import { Observable, Subject, combineLatest, map, merge, of } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
+import { Observable, Subject, combineLatest, map, merge, of, takeUntil, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { PokemonActions, PokemonSelectors } from '../store/pokemon';
+import { MoveDetailComponent } from './move-detail/move-detail.component';
 
 type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -47,16 +48,19 @@ class DamageTaken {
   styleUrls: ['./pokemon-detail.component.scss']
 })
 export class PokemonDetailComponent implements OnInit, OnDestroy {
-  pokemonDetail = new PokemonDetail();
-  chartOptions: Partial<ChartOptions>;
-  NOTHING = NOTHING;
-  noAbilityInfo = 'No information currently available for this ability.';
-  moveData = new Move();
+  @ViewChildren(MoveDetailComponent) moveDetailRef?: QueryList<MoveDetailComponent>;
+  @ViewChild('moveDetail') moveDetail?: MoveDetailComponent;
+  public pokemonDetail = new PokemonDetail();
+  public chartOptions: Partial<ChartOptions>;
+  public NOTHING = NOTHING;
+  public noAbilityInfo = 'No information currently available for this ability.';
+  public moveData = new Move();
   public pokemon$: Observable<Pokemon | null> = of(null)
   public pokemonLoading$: Observable<boolean>;
   public pokemonSpecies$: Observable<PokemonSpecies | null> = of(null);
   public pokemonSpeciesLoading$: Observable<boolean>;
   public pokemonDetail$?: Observable<any>;
+  public abilities$: Observable<Ability[]>;
 
   private destroyed$ = new Subject<boolean>;
 
@@ -67,12 +71,7 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
     private actions$: Actions,
     private store$: Store,
     ) {
-    this.route.data.subscribe(data => {
-      this.pokemonDetail = data['pokemonDetail'];
-      // TODO - erase console log
-      // console.log(data['pokemonDetail'])
-      
-    });
+    this.chartOptions = this.createChartOptions();
 
     this.route.params.subscribe(params => {
       const pokemonName = params['pokemonName'];
@@ -86,8 +85,6 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
       );
     });
 
-    this.chartOptions = this.createChartOptions();
-
     this.pokemonLoading$ =
       this.store$.select(
         PokemonSelectors.selectGetPokemonLoading
@@ -99,19 +96,38 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
       );
     
     this.pokemon$ = this.store$.select(PokemonSelectors.selectPokemon);
-    this.pokemonSpecies$ = this.store$.select(PokemonSelectors.selectPokemonSpecies)
+    this.pokemonSpecies$ = this.store$.select(PokemonSelectors.selectPokemonSpecies);
+    this.abilities$ = this.store$.select(PokemonSelectors.selectAbilites);
+
+    this.actions$.pipe(
+      ofType(PokemonActions.getPokemonSuccess),
+      takeUntil(this.destroyed$),
+      map(({ pokemon }) => {
+        for (let i = 0; i < pokemon.abilities.length; i++) {
+          this.store$.dispatch(PokemonActions.getAbility({ 
+            abilityName: pokemon.abilities[i].ability.name || ''
+          }));
+        }
+      })
+    )
+    .subscribe();
   }
 
   ngOnInit(): void { 
-    combineLatest([this.pokemon$, this.pokemonSpecies$])
+    combineLatest([this.pokemon$, this.pokemonSpecies$, this.abilities$])
     .pipe(
-      map(([pokemon, pokemonSpecies]) => {
+      map(([pokemon, pokemonSpecies, abilities]) => {
         this.pokemonDetail.flavorText = pokemonSpecies?.flavor_text_entries.find(item => { return item.language.name === "en" })?.flavor_text.replace('\f', ' ');
         this.pokemonDetail.genus = pokemonSpecies?.genera.find(item => { return item.language.name === "en" });
         this.pokemonDetail.entryNumber = pokemonSpecies?.pokedex_numbers.find(item => item.pokedex.name === "national")?.entry_number;
         this.pokemonDetail.evolvesFrom = pokemonSpecies?.evolves_from_species !== null ? pokemonSpecies?.evolves_from_species.name : 'nothing';
-      })
+        this.pokemonDetail.entryNumber = pokemonSpecies?.pokedex_numbers.find(item => item.pokedex.name === "national")?.entry_number;
+        this.pokemonDetail.verboseEffects = abilities?.map(ability => ability.effect_entries.find(item => { return item.language.name === "en" })!);
+        this.pokemonDetail.stats = pokemon?.stats.map(stat => stat.base_stat);
+      }),
+      takeUntil(this.destroyed$)
     )
+    .subscribe();
   }
 
   calculateDamageTaken(types: Type[] | null): DamageTaken[] {
@@ -161,12 +177,14 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
     return finalResult;
   }
 
-  fetchMoveData(moveName: string): void {
-    if (moveName !== this.moveData.name) {
-      this.pokedexService.getMoveByName(moveName).subscribe(data => {
-        this.moveData = data;
-      })
-    }
+  fetchMoveData(index: number, moveName: string): void {
+    // console.log('panel shown');
+    // console.log(this.moveDetail);
+    // const movePanel = this.moveDetailRef?.toArray()[index];
+    // if (this.moveDetail) {
+    //   console.log('inside condition')
+    //   this.moveDetail.getMoveData(moveName);
+    // }
   }
 
   formatName(move: string): string {
