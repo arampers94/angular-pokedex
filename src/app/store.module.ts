@@ -5,6 +5,7 @@ import { StoreModule } from "@ngrx/store";
 import { PokemonModule } from "./store/pokemon";
 import { MoveModule } from "./store/move";
 import { LocationModule } from "./store/location";
+import { GameModule } from "./store/game";
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { LocationModule } from "./store/location";
     PokemonModule,
     MoveModule,
     LocationModule,
+    GameModule,
   ]
 })
 export class AppStoreModule {}
