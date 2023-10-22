@@ -11,6 +11,7 @@ import { PokemonDetailModule } from './pokemon-detail/pokemon-detail.module';
 import { PokemonListModule } from './pokemon-list/pokemon-list.module';
 import { AppStoreModule } from './store.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     PokemonListModule,
     AppStoreModule,
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [MainComponent]

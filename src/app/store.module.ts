@@ -4,6 +4,7 @@ import { EffectsModule } from "@ngrx/effects";
 import { StoreModule } from "@ngrx/store";
 import { PokemonModule } from "./store/pokemon";
 import { MoveModule } from "./store/move";
+import { LocationModule } from "./store/location";
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { MoveModule } from "./store/move";
     EffectsModule.forRoot([]),
     PokemonModule,
     MoveModule,
+    LocationModule,
   ]
 })
 export class AppStoreModule {}
