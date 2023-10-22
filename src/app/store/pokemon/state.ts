@@ -1,4 +1,5 @@
-import { Ability, Pokemon, PokemonSpecies, Type } from "pokenode-ts"
+import { APIResource, Ability, Pokemon, PokemonSpecies, Type } from "pokenode-ts"
+import { NamedAPIResource } from "src/app/shared/models/named-api-resource.model";
 
 export interface State {
   pokemon: Pokemon | null;
@@ -13,6 +14,9 @@ export interface State {
   types: Type[];
   getTypeLoading: boolean;
   getTypeFailure: any;
+  allPokemon: NamedAPIResource[] | APIResource[];
+  getAllPokemonLoading: boolean;
+  getAllPokemonFailure: any;
 }
 
 export const initialState: State = {
@@ -28,4 +32,7 @@ export const initialState: State = {
   types: [],
   getTypeLoading: false,
   getTypeFailure: null,
+  allPokemon: [],
+  getAllPokemonLoading: false,
+  getAllPokemonFailure: null,
 }

@@ -14,6 +14,9 @@ import {
   getType,
   getTypeSuccess,
   getTypeFailure,
+  getAllPokemon,
+  getAllPokemonSuccess,
+  getAllPokemonFailure,
  } from "./actions";
 import { catchError, map, mergeMap, of, switchMap } from "rxjs";
 
@@ -70,6 +73,20 @@ export class PokemonEffects {
           .pipe(
             map(pokemonType => getTypeSuccess({ pokemonType })),
             catchError(error => of(getTypeFailure(error)))
+        )
+      )
+    )
+  );
+
+  getAllPokemon$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getAllPokemon),
+      switchMap(() =>
+        this.pokemonService
+          .getAllPokemon()
+          .pipe(
+            map(resourceList => getAllPokemonSuccess({ resourceList })),
+            catchError(error => of(getAllPokemonFailure(error)))
         )
       )
     )

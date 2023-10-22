@@ -1,6 +1,6 @@
 import { createAction } from "@ngrx/store";
 import { props } from "@ngrx/store";
-import { Ability, Pokemon, PokemonSpecies, Type } from "pokenode-ts";
+import { Ability, NamedAPIResourceList, Pokemon, PokemonSpecies, Type } from "pokenode-ts";
 
 
 export enum PokemonActionTypes {
@@ -16,6 +16,9 @@ export enum PokemonActionTypes {
   GET_TYPE_REQUEST = '[Pokemon] Get type request',
   GET_TYPE_SUCCESS = '[Pokemon] Get type success',
   GET_TYPE_FAILURE = '[Pokemon] Get type failure',
+  GET_ALL_POKEMON_REQUEST = '[Pokemon] Get all pokemon request',
+  GET_ALL_POKEMON_SUCCESS = '[Pokemon] Get all pokemon success',
+  GET_ALL_POKEMON_FAILURE = '[Pokemon] Get all pokemon failure',
 }
 
 export const getPokemon = createAction(
@@ -75,5 +78,19 @@ export const getTypeSuccess = createAction(
 
 export const getTypeFailure = createAction(
   PokemonActionTypes.GET_TYPE_FAILURE,
+  props<{ error: any }>()
+);
+
+export const getAllPokemon = createAction(
+  PokemonActionTypes.GET_ALL_POKEMON_REQUEST
+);
+
+export const getAllPokemonSuccess = createAction(
+  PokemonActionTypes.GET_ALL_POKEMON_SUCCESS,
+  props<{ resourceList: NamedAPIResourceList }>()
+);
+
+export const getAllPokemonFailure = createAction(
+  PokemonActionTypes.GET_ALL_POKEMON_FAILURE,
   props<{ error: any }>()
 );

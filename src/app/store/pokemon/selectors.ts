@@ -27,6 +27,12 @@ const getTypeLoading = (state: State): boolean =>
   state.getTypeLoading;
 const getTypeFailure = (state: State): any =>
   state.getTypeFailure;
+const allPokemon = (state: State): Pokemon | null => 
+  state.pokemon;
+const getAllPokemonLoading = (state: State): boolean =>
+  state.getPokemonLoading;
+const getAllPokemonFailure = (state: State): any =>
+  state.getPokemonFailure;
 
 export const pokemonState = createFeatureSelector<State>(
   pokemonFeatureKey
@@ -90,4 +96,19 @@ export const selectGetTypeLoading = createSelector(
 export const selectGetTypeFailure = createSelector(
   pokemonState,
   getTypeFailure
+);
+
+export const selectAllPokemon = createSelector(
+  pokemonState,
+  allPokemon
+);
+
+export const selectGetAllPokemonLoading = createSelector(
+  pokemonState,
+  getAllPokemonLoading
+);
+
+export const selectGetAllPokemonFailure = createSelector(
+  pokemonState,
+  getAllPokemonFailure
 );
