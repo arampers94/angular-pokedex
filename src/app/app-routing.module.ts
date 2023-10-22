@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { errorRoute } from './layouts/error-page/error-page.route';
 import { LandingPageComponent } from './layouts/landing-page/landing-page.component';
 import { navbarRoute } from './layouts/navbar/navbar.route';
-import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
+import { PokedexComponent } from './pokedex/pokedex.component';
 
 const LAYOUT_ROUTES = [navbarRoute, ...errorRoute]
 
@@ -19,7 +19,7 @@ const routes: Routes = [
   },
   {
     path: 'pokedex',
-    component: PokemonListComponent
+    loadChildren: () => import('./pokedex/pokedex.module').then(m => m.PokedexModule)
   },
   {
     path: 'pokemon-detail',

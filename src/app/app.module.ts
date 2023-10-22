@@ -8,10 +8,10 @@ import { MainComponent } from './layouts/main/main.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LandingPageModule } from './layouts/landing-page/landing-page.module';
 import { PokemonDetailModule } from './pokemon-detail/pokemon-detail.module';
-import { PokemonListModule } from './pokemon-list/pokemon-list.module';
 import { AppStoreModule } from './store.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HttpClientModule } from '@angular/common/http';
+import { PokedexModule } from './pokedex/pokedex.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
     NgbModule,
     LandingPageModule,
     PokemonDetailModule,
-    PokemonListModule,
+    PokedexModule,
     AppStoreModule,
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
     HttpClientModule,

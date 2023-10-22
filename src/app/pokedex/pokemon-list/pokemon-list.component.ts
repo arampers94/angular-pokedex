@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { LocationActions } from '../store';
+import { LocationSelectors } from '../../store';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -8,12 +8,13 @@ import { LocationActions } from '../store';
   styleUrls: ['./pokemon-list.component.scss']
 })
 export class PokemonListComponent implements OnInit {
+  public regions$ = this.store$.select(LocationSelectors.selectRegions);
   public regionName = '';
 
   constructor(private store$: Store) { }
 
   ngOnInit(): void {
-    this.store$.dispatch(LocationActions.getAllRegions());
+    
   }
 
 }
