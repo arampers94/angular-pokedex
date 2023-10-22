@@ -1,0 +1,36 @@
+ul {
+  list-style-type: none;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.region-item {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 1.15rem;
+  background-color: #343a40;
+  color: rgba(255, 255, 255, 0.8);
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #343a40;
+  }
+}
+
+.region-title {
+  padding: 10px 0;
+  margin: 0 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.list-item-transparent-overlay {
+  position: absolute;
+  z-index: 1;
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0);
+  transition: background-color .2s ease;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.09);
+  }
+}

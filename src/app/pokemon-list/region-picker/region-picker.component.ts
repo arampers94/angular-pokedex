@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { NamedAPIResource, APIResource } from 'pokenode-ts';
+import { LocationSelectors } from 'src/app/store';
 
 @Component({
   selector: 'app-region-picker',
@@ -6,10 +10,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./region-picker.component.scss']
 })
 export class RegionPickerComponent implements OnInit {
+  public regions$: Observable<NamedAPIResource[] | APIResource[]> = 
+    this.store$.select(LocationSelectors.selectRegions);
 
-  constructor() { }
+  constructor(private store$: Store) { }
 
   ngOnInit(): void {
+    
   }
 
+  isNamedAPIResource(item: NamedAPIResource | APIResource): item is NamedAPIResource {
+    return (item as NamedAPIResource).name !== undefined;
+  }
 }

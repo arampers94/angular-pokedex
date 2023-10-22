@@ -1,1 +1,13 @@
-<p>region-picker works!</p>
+<div class="region-title">
+  <h3>Regions</h3>
+</div>
+<ul *ngIf="(regions$ | async) as regions; else loading">
+  <!-- <div className="list-item-transparent-overlay"></div> -->
+  <li class="region-item" *ngFor="let region of regions">
+    <ng-container *ngIf="isNamedAPIResource(region)">
+      {{ region.name | titlecase }}
+    </ng-container>
+  </li>
+</ul>
+
+<ng-template #loading>Loading...</ng-template>
