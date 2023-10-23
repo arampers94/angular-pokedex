@@ -1,12 +1,26 @@
-<section class="main-content">
-    <div class="pokemon-list-grid">
+<section class="main-content" *ngIf="(pokedex$ | async) as pokedex">
+    <div class="pokemon-list-wrapper">
         <div class="pokemon-list-title">
-            <h3>Showing x Region Pokémon</h3>
+            <h3>{{ (currentPokedex | async) | titlecase  }} Pokedex</h3>
         </div>
-        <div class="form">
-            <div class="form-group">
+        <div class="form w-100">
+            <div class="form-group d-flex w-100">
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    [style.margin-right]="'0.5rem'" 
+                    placeholder="Enter a pokemon name" 
+                />
                 <button class="btn btn-primary">Search</button>
-                <input type="text" class="form-control" placeholder="Enter a pokemon name" />
+            </div>
+        </div>
+        <div *ngIf="(pokedex$ | async) as pokedex" class="d-flex flex-wrap">
+            <div *ngFor="let entry of pokedex.pokemon_entries; index as i">
+                <div class="d-flex flex-column text-center" [routerLink]="'/pokemon-detail/' + entry.pokemon_species.name">
+                    <div class="transparent-overlay"></div>
+                    <img [src]="'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + (i + 1) + '.png'" />
+                    {{ entry.pokemon_species.name | titlecase }}
+                </div>
             </div>
         </div>
     </div>

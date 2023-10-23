@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { LocationSelectors } from '../../store';
+import { GameSelectors, LocationSelectors } from '../../store';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -9,7 +9,8 @@ import { LocationSelectors } from '../../store';
 })
 export class PokemonListComponent implements OnInit {
   public regions$ = this.store$.select(LocationSelectors.selectRegions);
-  public regionName = '';
+  public currentPokedex = this.store$.select(GameSelectors.selectCurrentPokedexName);
+  public pokedex$ = this.store$.select(GameSelectors.selectPokedex);
 
   constructor(private store$: Store) { }
 

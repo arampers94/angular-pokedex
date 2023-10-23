@@ -2,13 +2,13 @@ import { createAction, props } from '@ngrx/store';
 import { NamedAPIResourceList } from 'pokenode-ts';
 
 export enum LocationActionTypes {
-  GET_ALL_REGIONS = "[Region] GET_ALL_REGIONS",
-  GET_ALL_REGIONS_SUCCESS = "[Region] GET_ALL_REGIONS SUCCESS",
-  GET_ALL_REGIONS_FAILURE = "[Region] GET_ALL_REGIONS FAIL",
+  GET_ALL_REGIONS_REQUEST = "[Location] Get all regions request",
+  GET_ALL_REGIONS_SUCCESS = "[Location] Get all regions success",
+  GET_ALL_REGIONS_FAILURE = "[Location] Get all regions failure",
 }
 
 export const getAllRegions = createAction( 
-  LocationActionTypes.GET_ALL_REGIONS,
+  LocationActionTypes.GET_ALL_REGIONS_REQUEST,
 );
 
 export const getAllRegionsSuccess = createAction( 
