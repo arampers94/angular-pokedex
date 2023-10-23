@@ -10,8 +10,18 @@
                     class="form-control" 
                     [style.margin-right]="'0.5rem'" 
                     placeholder="Enter a pokemon name" 
+                    [(ngModel)]="pokemonName"
+                    [ngbTypeahead]="search"
+                    (selectItem)="searchPokemon($event)"
+                    [resultFormatter]="formatter"
                 />
-                <button class="btn btn-primary">Search</button>
+                <button 
+                    class="btn btn-primary" 
+                    [routerLink]="'/pokemon-detail/' + pokemonName"
+                    [disabled]="pokemonName === ''"
+                >
+                    Search
+                </button>
             </div>
         </div>
         <div *ngIf="(pokedex$ | async) as pokedex" class="d-flex flex-wrap">
