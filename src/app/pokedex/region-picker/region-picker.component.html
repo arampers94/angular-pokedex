@@ -1,11 +1,12 @@
 <div class="region-title">
-  <h3>Regions</h3>
+  <h4>Regions</h4>
 </div>
 <ul *ngIf="(regions$ | async) as regions; else loading">
-  <!-- <div className="list-item-transparent-overlay"></div> -->
   <li class="region-item" *ngFor="let region of regions">
     <ng-container *ngIf="isNamedAPIResource(region)">
-      {{ region.name | titlecase }}
+      <div (click)="setCurrentPokedexName(region.name)">
+        {{ region.name | titlecase }}
+      </div>
     </ng-container>
   </li>
 </ul>

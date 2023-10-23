@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { NamedAPIResource, APIResource } from 'pokenode-ts';
-import { LocationSelectors } from 'src/app/store';
+import { GameActions, LocationSelectors } from 'src/app/store';
 
 @Component({
   selector: 'app-region-picker',
@@ -21,5 +21,9 @@ export class RegionPickerComponent implements OnInit {
 
   isNamedAPIResource(item: NamedAPIResource | APIResource): item is NamedAPIResource {
     return (item as NamedAPIResource).name !== undefined;
+  }
+
+  setCurrentPokedexName(pokedexName: string): void {
+    this.store$.dispatch(GameActions.setCurrentPokedexName({ pokedexName }))
   }
 }

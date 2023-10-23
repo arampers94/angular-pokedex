@@ -9,6 +9,8 @@ const getPokedexLoading = (state: State): boolean =>
   state.getPokedexLoading;
 const getPokedexFailure = (state: State): any =>
   state.getPokedexFailure;
+const currentPokedexName = (state: State): string =>
+  state.currentPokedexName;
 
 export const gameState = createFeatureSelector<State>(
   gameFeatureKey
@@ -27,4 +29,9 @@ export const selectGetPokedexLoading = createSelector(
 export const selectGetPokedexFailure = createSelector(
   gameState,
   getPokedexFailure
+);
+
+export const selectCurrentPokedexName = createSelector(
+  gameState,
+  currentPokedexName
 );
