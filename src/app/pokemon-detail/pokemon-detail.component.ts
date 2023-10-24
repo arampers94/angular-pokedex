@@ -16,7 +16,7 @@ import { Move } from '../shared/models/move.model';
 import { PokemonDetail } from '../shared/models/pokemon-detail.model';
 import { PokedexService } from '../shared/services/pokedex.service';
 import { Actions, ofType } from '@ngrx/effects';
-import { Observable, Subject, combineLatest, map, merge, of, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, combineLatest, map, of, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { PokemonActions, PokemonSelectors } from '../store/pokemon';
 import { MoveDetailComponent } from './move-detail/move-detail.component';
@@ -61,7 +61,9 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
   public pokemonSpeciesLoading$: Observable<boolean>;
   public pokemonDetail$?: Observable<any>;
   public abilities$: Observable<Ability[]>;
+  public abilitiesLoading$: Observable<boolean>;
   public pokemon?: Pokemon;
+  public loading$: Observable<boolean>;
 
   private destroyed$ = new Subject<boolean>;
 
@@ -102,6 +104,11 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
       this.store$.select(
         PokemonSelectors.selectGetPokemonSpeciesLoading
       );
+
+    this.abilitiesLoading$ = 
+      this.store$.select(
+        PokemonSelectors.selectGetAbilityLoading
+      );
     
     this.pokemon$ = this.store$.select(PokemonSelectors.selectPokemon);
     this.pokemonSpecies$ = this.store$.select(PokemonSelectors.selectPokemonSpecies);
@@ -119,6 +126,17 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+
+    this.loading$ = combineLatest([
+      this.pokemonLoading$,
+      this.pokemonSpeciesLoading$,
+      this.abilitiesLoading$
+    ]).pipe(
+      map(([pokemonLoading, pokemonSpeciesLoading, abilitiesLoading]) => {
+        return pokemonLoading || pokemonSpeciesLoading || abilitiesLoading
+      }),
+      takeUntil(this.destroyed$)
+    );
   }
 
   ngOnInit(): void { 

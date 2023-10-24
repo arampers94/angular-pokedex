@@ -1,5 +1,5 @@
-<app-loading-screen *ngIf="(pokemonLoading$ | async)"></app-loading-screen>
-<div *ngIf="(pokemonLoading$ | async) === false">
+<app-loading-screen *ngIf="(loading$ | async)"></app-loading-screen>
+<div *ngIf="(loading$ | async) === false">
     <div *ngIf="pokemon$ | async as pokemon" class="row detail-container">
         <div class="col detail-card">
             <div class="row detail-wrapper">
