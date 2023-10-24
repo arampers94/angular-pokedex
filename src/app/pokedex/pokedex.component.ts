@@ -20,6 +20,7 @@ export class PokedexComponent implements OnInit {
   public allRegionsLoading$ = this.store$.select(LocationSelectors.selectGetAllRegionsLoading);
   public pokedexLoading$ = this.store$.select(GameSelectors.selectGetPokedexLoading);
   public loading$: Observable<boolean>;
+  public initialFetchCompleted$ = this.store$.select(PokemonSelectors.selectInitialFetchCompleted);
 
   constructor(private store$: Store) {
     this.loading$ = combineLatest([
@@ -34,8 +35,13 @@ export class PokedexComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store$.dispatch(PokemonActions.getAllPokemon());
-    this.store$.dispatch(LocationActions.getAllRegions());
-    this.store$.dispatch(GameActions.getPokedex({ id: 1 }));
+    this.initialFetchCompleted$.subscribe(initialFetchCompleted => {
+      if (!initialFetchCompleted) {
+        this.store$.dispatch(PokemonActions.getAllPokemon());
+        this.store$.dispatch(LocationActions.getAllRegions());
+        this.store$.dispatch(GameActions.getPokedex({ id: 1 }));
+        this.store$.dispatch(PokemonActions.updateInitialFetchCompleted({ fetchCompleted: true }));
+      }
+    });
   }
 }

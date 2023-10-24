@@ -17,6 +17,7 @@ export interface State {
   allPokemon: NamedAPIResource[] | APIResource[];
   getAllPokemonLoading: boolean;
   getAllPokemonFailure: any;
+  initialFetchCompleted: boolean;
 }
 
 export const initialState: State = {
@@ -35,4 +36,5 @@ export const initialState: State = {
   allPokemon: [],
   getAllPokemonLoading: false,
   getAllPokemonFailure: null,
+  initialFetchCompleted: false,
 }

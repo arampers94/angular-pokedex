@@ -19,6 +19,7 @@ export enum PokemonActionTypes {
   GET_ALL_POKEMON_REQUEST = '[Pokemon] Get all pokemon request',
   GET_ALL_POKEMON_SUCCESS = '[Pokemon] Get all pokemon success',
   GET_ALL_POKEMON_FAILURE = '[Pokemon] Get all pokemon failure',
+  UPDATE_INITIAL_FETCH_COMPLETED = '[Pokemon] Update initial fetch completed',
 }
 
 export const getPokemon = createAction(
@@ -93,4 +94,9 @@ export const getAllPokemonSuccess = createAction(
 export const getAllPokemonFailure = createAction(
   PokemonActionTypes.GET_ALL_POKEMON_FAILURE,
   props<{ error: any }>()
+);
+
+export const updateInitialFetchCompleted = createAction(
+  PokemonActionTypes.UPDATE_INITIAL_FETCH_COMPLETED,
+  props<{ fetchCompleted: boolean }>()
 );

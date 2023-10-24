@@ -33,6 +33,8 @@ const getAllPokemonLoading = (state: State): boolean =>
   state.getPokemonLoading;
 const getAllPokemonFailure = (state: State): any =>
   state.getPokemonFailure;
+const initialFetchCompleted = (state: State): boolean =>
+  state.initialFetchCompleted;
 
 export const pokemonState = createFeatureSelector<State>(
   pokemonFeatureKey
@@ -111,4 +113,9 @@ export const selectGetAllPokemonLoading = createSelector(
 export const selectGetAllPokemonFailure = createSelector(
   pokemonState,
   getAllPokemonFailure
+);
+
+export const selectInitialFetchCompleted = createSelector(
+  pokemonState,
+  initialFetchCompleted
 );

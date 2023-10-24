@@ -16,6 +16,7 @@ import {
   getAllPokemon,
   getAllPokemonSuccess,
   getAllPokemonFailure,
+  updateInitialFetchCompleted,
  } from "./actions";
 
 export const pokemonFeatureKey = 'pokemon';
@@ -92,6 +93,10 @@ export const pokemonReducer = createReducer(
     getAllPokemonLoading: false,
     getAllPokemonFailure: error
   })),
+  on(updateInitialFetchCompleted, (state, { fetchCompleted }) => ({
+    ...state,
+    initialFetchCompleted: fetchCompleted
+  }))
 );
 
 export const reducer = (state: State, action: Action) =>
