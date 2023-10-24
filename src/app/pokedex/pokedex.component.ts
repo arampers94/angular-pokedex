@@ -4,7 +4,11 @@ import {
   PokemonActions, 
   LocationActions,
   GameActions,
+  PokemonSelectors,
+  LocationSelectors,
+  GameSelectors,
 } from '../store';
+import { Observable, combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-pokedex',
@@ -12,8 +16,22 @@ import {
   styleUrls: ['./pokedex.component.scss']
 })
 export class PokedexComponent implements OnInit {
+  public allPokemonLoading$ = this.store$.select(PokemonSelectors.selectGetAllPokemonLoading);
+  public allRegionsLoading$ = this.store$.select(LocationSelectors.selectGetAllRegionsLoading);
+  public pokedexLoading$ = this.store$.select(GameSelectors.selectGetPokedexLoading);
+  public loading$: Observable<boolean>;
 
-  constructor(private store$: Store) {}
+  constructor(private store$: Store) {
+    this.loading$ = combineLatest([
+      this.allPokemonLoading$,
+      this.allRegionsLoading$,
+      this.pokedexLoading$,
+    ]).pipe(
+      map(([pokemonLoading, regionsLoading, pokedexLoading]) => {
+        return pokemonLoading || regionsLoading || pokedexLoading;
+      })
+    )
+  }
 
   ngOnInit(): void {
     this.store$.dispatch(PokemonActions.getAllPokemon());

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { 
   ApexAxisChartSeries, 
@@ -61,6 +61,7 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
   public pokemonSpeciesLoading$: Observable<boolean>;
   public pokemonDetail$?: Observable<any>;
   public abilities$: Observable<Ability[]>;
+  public pokemon?: Pokemon;
 
   private destroyed$ = new Subject<boolean>;
 
@@ -70,7 +71,14 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private actions$: Actions,
     private store$: Store,
-    ) {
+    private router: Router
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        window.scrollTo(0, 0);
+      }
+    });
+
     this.chartOptions = this.createChartOptions();
 
     this.route.params.subscribe(params => {
@@ -128,6 +136,12 @@ export class PokemonDetailComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$)
     )
     .subscribe();
+
+    this.pokemon$.subscribe(pokemon => {
+      if (pokemon) {
+        this.pokemon = pokemon;
+      }
+    })
   }
 
   calculateDamageTaken(types: Type[] | null): DamageTaken[] {

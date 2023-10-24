@@ -6,6 +6,7 @@ import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { LoadingScreenModule } from '../layouts/loading-screen/loading-screen.module';
 
 const ROUTES = [
   {
@@ -25,6 +26,7 @@ const ROUTES = [
     RouterModule.forChild(ROUTES),
     FormsModule,
     NgbTypeaheadModule,
+    LoadingScreenModule,
   ]
 })
 export class PokedexModule { }

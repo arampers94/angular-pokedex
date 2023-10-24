@@ -1,128 +1,131 @@
-<div *ngIf="pokemonDetail && (pokemon$ | async) as pokemon" class="row detail-container">
-    <div class="col detail-card">
-        <div class="row detail-wrapper">
-            <div class="row pb-3">
-                <div class="col-6 pokemon-image">
-                    <img [src]="pokemon.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
-                </div>
-                <div class="col-6">
-                    <div class="pokemon-name-type">
-                        <h4>{{ pokemon.name }}</h4>
-                        <div class="d-inline-flex">
-                            <div class="flex-row">
-                                <span class="list-item" *ngFor="let type of pokemon.types; let isLast=last">
-                                    {{ type.type.name + (!isLast ? ',' : '') }}
-                                </span>
+<app-loading-screen *ngIf="(pokemonLoading$ | async)"></app-loading-screen>
+<div *ngIf="(pokemonLoading$ | async) === false">
+    <div *ngIf="pokemon$ | async as pokemon" class="row detail-container">
+        <div class="col detail-card">
+            <div class="row detail-wrapper">
+                <div class="row pb-3">
+                    <div class="col-6 pokemon-image">
+                        <img [src]="pokemon.sprites.front_default" [height]="140" [width]="140" alt="pkmn-pic" />
+                    </div>
+                    <div class="col-6">
+                        <div class="pokemon-name-type">
+                            <h4>{{ pokemon.name }}</h4>
+                            <div class="d-inline-flex">
+                                <div class="flex-row">
+                                    <span class="list-item" *ngFor="let type of pokemon.types; let isLast=last">
+                                        {{ type.type.name + (!isLast ? ',' : '') }}
+                                    </span>
+                                </div>
+                                <div class="divider">{{ '|' }}</div>
+                                <p>
+                                    #{{ pokemonDetail.entryNumber }}
+                                </p>
                             </div>
-                            <div class="divider">{{ '|' }}</div>
-                            <p>
-                                #{{ pokemonDetail.entryNumber }}
-                            </p>
+                        </div>
+                        <ng-container *ngIf="pokemonDetail.evolvesFrom !== NOTHING; then showLink; else nothing"></ng-container>
+                    </div>
+                </div>
+                
+                <section class="entry-section">
+                    <div class="col section-title">
+                        <h6 *ngIf="pokemonDetail.genus">{{ pokemonDetail.genus.genus }}</h6>
+                    </div>
+                    <div class="col section-content">
+                        <div>{{ pokemonDetail.flavorText }}</div>
+                    </div>
+                </section>
+
+                <section class="entry-section">
+                    <div class="col section-title">
+                        <h6>Abilities</h6>
+                    </div>
+                    <div class="col section-content" *ngIf="pokemonDetail.verboseEffects">
+                        <div *ngFor="let ability of pokemon.abilities; let index=index; let isLast=last">
+                            <span 
+                                class="list-item" 
+                                triggers="mouseenter:mouseleave"
+                                [ngbPopover]="pokemonDetail.verboseEffects[index] ? pokemonDetail.verboseEffects[index].effect : noAbilityInfo" 
+                            >
+                                {{ formatName(ability.ability.name) + (ability.is_hidden ? ' (Hidden)' : '') + (!isLast ? ',' : '') }}
+                            </span>
                         </div>
                     </div>
-                    <ng-container *ngIf="pokemonDetail.evolvesFrom !== NOTHING; then showLink; else nothing"></ng-container>
-                </div>
+                </section>
+
+                <section *ngIf="chartOptions && pokemonDetail.stats" class="entry-section stat-chart">
+                    <apx-chart
+                        [series]="[{ name: 'Pokemon stat series', data: pokemonDetail.stats }]"
+                        [chart]="chartOptions.chart!"
+                        [xaxis]="chartOptions.xaxis!"
+                        [title]="chartOptions.title!"
+                        [plotOptions]="chartOptions.plotOptions!"
+                        [legend]="chartOptions.legend!"
+                        [tooltip]="chartOptions.tooltip!"
+                        [colors]="chartOptions.colors!"
+                    ></apx-chart>
+                </section>
+
+                <section class="entry-section">
+                    <div class="col section-title pb-3">
+                        <h6>Physical Traits</h6>
+                    </div>
+                    <div class="col-12 section-content">
+                        <div class="col grid-block">
+                            <p>{{ pokemon.height / 10 }}m</p>
+                            <h6>Height</h6>
+                        </div>
+                        <div class="col grid-block">
+                            <p>{{ pokemon.weight / 10 }}kg.</p>
+                            <h6>Weight</h6>
+                        </div>
+                        <div class="col grid-block" id="last-col">
+                            <p>{{ pokemon.base_experience }}</p>
+                            <h6>Base Exp.</h6>
+                        </div>
+                    </div>
+                </section>
+
+                <section *ngIf="pokemonDetail.types" class="entry-section">
+                    <div class="col section-title pb-2">
+                        <h6>Damage Taken from Type</h6>
+                    </div>
+                    <div class="row">
+                        <div class="row" style="max-width: 50%;" *ngFor="let damageTypeTaken of calculateDamageTaken(pokemonDetail.types)">
+                            <div class="col-6">
+                                <div style="text-transform: capitalize;">
+                                    {{ damageTypeTaken.name }}
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                {{ damageTypeTaken.multiplier }}x
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="entry-section">
+                    <div class="col section-title">
+                        <h6>Move Set</h6>
+                    </div>
+                    <div ngbAccordion [closeOthers]="true">
+                        <div [ngbAccordionItem]="'move' + index" [destroyOnHide]="false" (shown)="fetchMoveData(index, move.move.name)" *ngFor="let move of pokemon.moves | slice:0:5; let index=index">
+                            <h2 ngbAccordionHeader>
+                                <button ngbAccordionButton>{{ formatName(move.move.name) }}</button>
+                            </h2>
+                            <div ngbAccordionCollapse>
+                                <div ngbAccordionBody>
+                                    <ng-template>
+                                        <app-move-detail [id]="index" [moveName]="move.move.name" #moveDetail></app-move-detail>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 pt-3">
+                        <button class="btn btn-info" (click)="showMoveListModal(moveListModal)">View all moves</button>
+                    </div>
+                </section>
             </div>
-
-            <section class="entry-section">
-                <div class="col section-title">
-                    <h6 *ngIf="pokemonDetail.genus">{{ pokemonDetail.genus.genus }}</h6>
-                </div>
-                <div class="col section-content">
-                    <div>{{ pokemonDetail.flavorText }}</div>
-                </div>
-            </section>
-
-            <section class="entry-section">
-                <div class="col section-title">
-                    <h6>Abilities</h6>
-                </div>
-                <div class="col section-content" *ngIf="pokemonDetail.verboseEffects">
-                    <div *ngFor="let ability of pokemon.abilities; let index=index; let isLast=last">
-                        <span 
-                            class="list-item" 
-                            triggers="mouseenter:mouseleave"
-                            [ngbPopover]="pokemonDetail.verboseEffects[index] ? pokemonDetail.verboseEffects[index].effect : noAbilityInfo" 
-                        >
-                            {{ formatName(ability.ability.name) + (ability.is_hidden ? ' (Hidden)' : '') + (!isLast ? ',' : '') }}
-                        </span>
-                    </div>
-                </div>
-            </section>
-
-            <section *ngIf="chartOptions && pokemonDetail.stats" class="entry-section stat-chart">
-                <apx-chart
-                    [series]="[{ name: 'Pokemon stat series', data: pokemonDetail.stats }]"
-                    [chart]="chartOptions.chart!"
-                    [xaxis]="chartOptions.xaxis!"
-                    [title]="chartOptions.title!"
-                    [plotOptions]="chartOptions.plotOptions!"
-                    [legend]="chartOptions.legend!"
-                    [tooltip]="chartOptions.tooltip!"
-                    [colors]="chartOptions.colors!"
-                ></apx-chart>
-            </section>
-
-            <section class="entry-section">
-                <div class="col section-title pb-3">
-                    <h6>Physical Traits</h6>
-                </div>
-                <div class="col-12 section-content">
-                    <div class="col grid-block">
-                        <p>{{ pokemon.height / 10 }}m</p>
-                        <h6>Height</h6>
-                    </div>
-                    <div class="col grid-block">
-                        <p>{{ pokemon.weight / 10 }}kg.</p>
-                        <h6>Weight</h6>
-                    </div>
-                    <div class="col grid-block" id="last-col">
-                        <p>{{ pokemon.base_experience }}</p>
-                        <h6>Base Exp.</h6>
-                    </div>
-                </div>
-            </section>
-
-            <section *ngIf="pokemonDetail.types" class="entry-section">
-                <div class="col section-title pb-2">
-                    <h6>Damage Taken from Type</h6>
-                </div>
-                <div class="row">
-                    <div class="row" style="max-width: 50%;" *ngFor="let damageTypeTaken of calculateDamageTaken(pokemonDetail.types)">
-                        <div class="col-6">
-                            <div style="text-transform: capitalize;">
-                                {{ damageTypeTaken.name }}
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            {{ damageTypeTaken.multiplier }}x
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="entry-section">
-                <div class="col section-title">
-                    <h6>Move Set</h6>
-                </div>
-                <div ngbAccordion [closeOthers]="true">
-                    <div [ngbAccordionItem]="'move' + index" [destroyOnHide]="false" (shown)="fetchMoveData(index, move.move.name)" *ngFor="let move of pokemon.moves | slice:0:5; let index=index">
-                        <h2 ngbAccordionHeader>
-                            <button ngbAccordionButton>{{ formatName(move.move.name) }}</button>
-                        </h2>
-                        <div ngbAccordionCollapse>
-                            <div ngbAccordionBody>
-                                <ng-template>
-                                    <app-move-detail [id]="index" [moveName]="move.move.name" #moveDetail></app-move-detail>
-                                </ng-template>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 pt-3">
-                    <button class="btn btn-info" (click)="showMoveListModal(moveListModal)">View all moves</button>
-                </div>
-            </section>
         </div>
     </div>
 </div>

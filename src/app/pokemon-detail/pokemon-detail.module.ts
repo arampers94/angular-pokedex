@@ -5,6 +5,7 @@ import { PokemonDetailComponent } from './pokemon-detail.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgbAccordionModule, NgbModalModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { MoveDetailComponent } from './move-detail/move-detail.component';
+import { LoadingScreenModule } from '../layouts/loading-screen/loading-screen.module';
 
 const ROUTES = [
   {
@@ -27,6 +28,7 @@ const ROUTES = [
     NgbPopoverModule,
     NgbAccordionModule,
     NgbModalModule,
+    LoadingScreenModule,
   ]
 })
 export class PokemonDetailModule { }
