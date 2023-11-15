@@ -25,5 +25,6 @@ export class RegionPickerComponent implements OnInit {
 
   setCurrentPokedexName(pokedexName: string): void {
     this.store$.dispatch(GameActions.setCurrentPokedexName({ pokedexName }))
+    this.store$.dispatch(GameActions.getPokedex({ id: 1, region: pokedexName }))
   }
 }

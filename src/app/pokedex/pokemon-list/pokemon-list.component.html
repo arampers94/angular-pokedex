@@ -24,11 +24,11 @@
                 </button>
             </div>
         </div>
-        <div *ngIf="(pokedex$ | async) as pokedex" class="d-flex flex-wrap">
+        <div *ngIf="(pokedex$ | async) as pokedex" class="d-flex flex-wrap justify-space-between">
             <div *ngFor="let entry of pokedex.pokemon_entries; index as i">
                 <div class="d-flex flex-column text-center" [routerLink]="'/pokemon-detail/' + entry.pokemon_species.name">
                     <div class="transparent-overlay"></div>
-                    <img [src]="'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + (i + 1) + '.png'" />
+                    <img [src]="'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + pokemonNationalDexNumber(entry) + '.png'" />
                     {{ entry.pokemon_species.name | titlecase }}
                 </div>
             </div>

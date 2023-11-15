@@ -1,5 +1,5 @@
 <app-loading-screen *ngIf="loading$ | async as loading"></app-loading-screen>
-<div *ngIf="(loading$ | async) === false" class="row">
+<div *ngIf="(loading$ | async) === false" class="row container m-auto">
   <div class="col-3 mb-3">
       <div class="sidebar">
           <app-region-picker></app-region-picker>

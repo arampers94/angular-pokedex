@@ -4,6 +4,7 @@ import { GameSelectors, LocationSelectors } from '../../store';
 import { Observable, OperatorFunction, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
+import { PokemonEntry } from 'pokenode-ts';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -22,7 +23,7 @@ export class PokemonListComponent implements OnInit {
   constructor(
     private store$: Store, 
     private router: Router, 
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.pokedex$.subscribe(pokedex => {
@@ -44,5 +45,17 @@ export class PokemonListComponent implements OnInit {
 
   searchPokemon(event: NgbTypeaheadSelectItemEvent): void {
     this.router.navigateByUrl('/pokemon-detail/' + event.item);
+  }
+
+  pokemonNationalDexNumber(entry: PokemonEntry): number {
+    return this.extractNumberFromUrl(entry.pokemon_species.url)
+  }
+
+  private extractNumberFromUrl(url: string): number {
+    const match = url.match(/\/(\d+)\/$/);
+    if (match) {
+      return parseInt(match[1], 10);
+    }
+    return 0;
   }
 }
