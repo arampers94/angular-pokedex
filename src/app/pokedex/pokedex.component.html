@@ -1,11 +1,14 @@
-<app-loading-screen *ngIf="loading$ | async as loading"></app-loading-screen>
-<div *ngIf="(loading$ | async) === false" class="row container m-auto">
-  <div class="col-3 mb-3">
-      <div class="sidebar">
-          <app-region-picker></app-region-picker>
+@if (loading$ | async; as loading) {
+    <app-loading-screen></app-loading-screen>
+} @else {
+    <div class="row container m-auto">
+      <div class="col-3 mb-3">
+          <div class="sidebar">
+              <app-region-picker></app-region-picker>
+          </div>
       </div>
-  </div>
-  <div class="col-9">
-      <app-pokemon-list></app-pokemon-list>
-  </div>
-</div>
+      <div class="col-9">
+          <app-pokemon-list></app-pokemon-list>
+      </div>
+    </div>
+}
