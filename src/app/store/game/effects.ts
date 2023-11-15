@@ -5,7 +5,10 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import {
   getPokedex,
   getPokedexSuccess,
-  getPokedexFailure
+  getPokedexFailure,
+  getPokedexList,
+  getPokedexListSuccess,
+  getPokedexListFailure,
 } from './actions';
 import { GameService } from 'src/app/shared/services/game.service';
 
@@ -20,6 +23,20 @@ export class GameEffects {
           .pipe(
             map(pokedex => getPokedexSuccess({ pokedex })),
             catchError(error => of(getPokedexFailure(error)))
+          )
+      )
+    )
+  );
+
+  getPokedexList$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(getPokedexList),
+      switchMap((action) => 
+        this.gameService
+          .getPokedexList(action.offset, action.limit)
+          .pipe(
+            map(pokedexList => getPokedexListSuccess({ pokedexList })),
+            catchError(error => of(getPokedexListFailure(error)))
           )
       )
     )

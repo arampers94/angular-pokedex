@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { GameClient, Pokedex } from "pokenode-ts";
+import { GameClient, NamedAPIResourceList, Pokedex } from "pokenode-ts";
 import { Observable, from } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
@@ -12,5 +12,9 @@ export class GameService {
         this.gameClient.getPokedexByName(region) : 
         this.gameClient.getPokedexById(id)
     );
+  }
+
+  public getPokedexList(offset?: number, limit?: number): Observable<NamedAPIResourceList | null> {
+    return from(this.gameClient.listPokedexes(offset, limit));
   }
 }

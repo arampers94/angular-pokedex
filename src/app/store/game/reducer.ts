@@ -4,6 +4,9 @@ import {
   getPokedexSuccess,
   getPokedexFailure,
   setCurrentPokedexName,
+  getPokedexList,
+  getPokedexListSuccess,
+  getPokedexListFailure,
 } from './actions';
 import { State } from './state';
 import { initialState } from './state';
@@ -30,6 +33,20 @@ export const gameReducer = createReducer(
   on(setCurrentPokedexName, (state, { pokedexName }) => ({ 
     ...state, 
     currentPokedexName: pokedexName
+  })),
+  on(getPokedexList, state => ({ 
+    ...state, 
+    getPokedexListLoading: true,
+  })),
+  on(getPokedexListSuccess, (state, { pokedexList }) => ({ 
+    ...state, 
+    getPokedexListLoading: false,
+    pokedexList
+  })),
+  on(getPokedexListFailure, (state, error) => ({ 
+    ...state, 
+    getPokedexListLoading: false,
+    getPokedexListFailure: error,
   })),
 );
 export const reducer = (state: State, action: Action) =>
