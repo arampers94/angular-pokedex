@@ -10,27 +10,20 @@ import { LandingPageModule } from './layouts/landing-page/landing-page.module';
 import { PokemonDetailModule } from './pokemon-detail/pokemon-detail.module';
 import { AppStoreModule } from './store.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { PokedexModule } from './pokedex/pokedex.module';
 
-@NgModule({
-  declarations: [
-    ErrorPageComponent,
-    NavbarComponent,
-    MainComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule,
-    LandingPageModule,
-    PokemonDetailModule,
-    PokedexModule,
-    AppStoreModule,
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
-    HttpClientModule,
-  ],
-  providers: [],
-  bootstrap: [MainComponent]
-})
+@NgModule({ declarations: [
+        ErrorPageComponent,
+        NavbarComponent,
+        MainComponent
+    ],
+    bootstrap: [MainComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        NgbModule,
+        LandingPageModule,
+        PokemonDetailModule,
+        PokedexModule,
+        AppStoreModule,
+        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
