@@ -8,7 +8,7 @@ import {
   getAllRegionsSuccess,
   getAllRegionsFailure
 } from './actions';
-import { LocationService } from 'src/app/shared/services/location.service';
+import { LocationService } from 'src/app/core/services/location.service';
 
 @Injectable()
 export class LocationEffects {

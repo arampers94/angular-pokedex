@@ -1,5 +1,5 @@
 import { APIResource, Ability, Pokemon, PokemonSpecies, Type } from "pokenode-ts"
-import { NamedAPIResource } from "src/app/shared/models/named-api-resource.model";
+import { NamedAPIResource } from "src/app/core/models/named-api-resource.model";
 
 export interface State {
   pokemon: Pokemon | null;

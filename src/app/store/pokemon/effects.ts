@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { PokemonService } from "src/app/shared/services/pokemon.service";
+import { PokemonService } from "src/app/core/services/pokemon.service";
 import {
   getPokemon,
   getPokemonSuccess,

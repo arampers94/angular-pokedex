@@ -152,14 +152,14 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div *ngIf="moveData && pokemonDetail.pokemon" class="modal-body" style="background-color: #343a40;">
-        <ngb-accordion [closeOthers]="true" #acc="ngbAccordion">
-            <ngb-panel (shown)="fetchMoveData(index, move.move.name)" *ngFor="let move of (pokemon$ | async)?.moves; let index=index">
+        <div ngbAccordion [closeOthers]="true" #acc="ngbAccordion">
+            <div ngbAccordionItem (shown)="fetchMoveData(index, move.move.name)" *ngFor="let move of (pokemon$ | async)?.moves; let index=index">
                 <ng-template ngbPanelTitle>{{ formatName(move.move.name) }}</ng-template>
                 <ng-template *ngIf="moveData && moveData.name === move.move.name" ngbPanelContent>
                     <app-move-detail></app-move-detail>
                 </ng-template>
-            </ngb-panel>
-        </ngb-accordion>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-light" (click)="modal.close()">Close</button>

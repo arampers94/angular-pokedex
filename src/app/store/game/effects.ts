@@ -10,7 +10,7 @@ import {
   getPokedexListSuccess,
   getPokedexListFailure,
 } from './actions';
-import { GameService } from 'src/app/shared/services/game.service';
+import { GameService } from 'src/app/core/services/game.service';
 
 @Injectable()
 export class GameEffects {

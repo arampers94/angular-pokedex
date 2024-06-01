@@ -12,9 +12,9 @@ import {
 } from 'ng-apexcharts';
 import { Ability, Pokemon, PokemonSpecies, Type } from 'pokenode-ts';
 import { NOTHING } from '../app.constants';
-import { Move } from '../shared/models/move.model';
-import { PokemonDetail } from '../shared/models/pokemon-detail.model';
-import { PokedexService } from '../shared/services/pokedex.service';
+import { Move } from '../core/models/move.model';
+import { PokemonDetail } from '../core/models/pokemon-detail.model';
+import { PokedexService } from '../core/services/pokedex.service';
 import { Actions, ofType } from '@ngrx/effects';
 import { Observable, Subject, combineLatest, map, of, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';

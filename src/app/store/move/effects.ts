@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, map, of, switchMap } from "rxjs";
-import { MoveService } from "src/app/shared/services/move.service";
+import { MoveService } from "src/app/core/services/move.service";
 import {
   getMove,
   getMoveSuccess,

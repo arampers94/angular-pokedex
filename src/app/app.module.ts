@@ -18,12 +18,16 @@ import { PokedexModule } from './pokedex/pokedex.module';
         NavbarComponent,
         MainComponent
     ],
-    bootstrap: [MainComponent], imports: [BrowserModule,
+    bootstrap: [MainComponent], 
+    imports: [
+        BrowserModule,
         AppRoutingModule,
         NgbModule,
         LandingPageModule,
         PokemonDetailModule,
         PokedexModule,
         AppStoreModule,
-        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true})], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true})
+    ], 
+    providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
