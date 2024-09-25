@@ -26,7 +26,7 @@
                 </div>
             </div>
             @if (pokedex$ | async; as pokedex) {
-                <div class="d-flex flex-wrap justify-space-between mb-4">
+                <div class="d-flex flex-wrap justify-space-between mb-4 mt-3 w-100">
                     @for (entry of displayedPokemon; track entry; let i = $index) {
                         <div class="d-flex flex-column text-center" [routerLink]="'/pokemon-detail/' + entry.pokemon_species.name">
                             <div class="transparent-overlay"></div>
@@ -39,6 +39,7 @@
                     [collectionSize]="pokedex.pokemon_entries.length"
                     [page]="(currentPokedexPage$ | async) || 1"
                     [maxSize]="5"
+                    [pageSize]="pageSize"
                     [rotate]="true"
                     [ellipses]="false"
                     [boundaryLinks]="true"
