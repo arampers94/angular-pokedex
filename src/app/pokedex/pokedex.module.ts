@@ -5,13 +5,13 @@ import { RegionPickerComponent } from './region-picker/region-picker.component';
 import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTypeaheadModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingScreenModule } from '../layouts/loading-screen/loading-screen.module';
 
 const ROUTES = [
   {
     path: '',
-    component: PokedexComponent
+    component: PokedexComponent,
   }
 ];
 
@@ -25,6 +25,7 @@ const ROUTES = [
     CommonModule,
     RouterModule.forChild(ROUTES),
     FormsModule,
+    NgbPaginationModule,
     NgbTypeaheadModule,
     LoadingScreenModule,
   ]

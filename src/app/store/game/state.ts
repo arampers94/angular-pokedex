@@ -5,6 +5,7 @@ export interface State {
   getPokedexLoading: boolean;
   getPokedexFailure: any;
   currentPokedexName: string;
+  currentPokedexPage: number;
   pokedexList: NamedAPIResourceList | null;
   getPokedexListLoading: boolean;
   getPokedexListFailure: any;
@@ -15,6 +16,7 @@ export const initialState: State = {
   getPokedexLoading: false,
   getPokedexFailure: null,
   currentPokedexName: 'National',
+  currentPokedexPage: 1,
   pokedexList: null,
   getPokedexListLoading: false,
   getPokedexListFailure: null,

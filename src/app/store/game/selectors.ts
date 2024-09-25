@@ -11,6 +11,8 @@ const getPokedexFailure = (state: State): any =>
   state.getPokedexFailure;
 const currentPokedexName = (state: State): string =>
   state.currentPokedexName;
+const currentPokedexPage = (state: State): number =>
+  state.currentPokedexPage;
 const pokedexList = (state: State): NamedAPIResourceList | null =>
   state.pokedexList;
 const getPokedexListLoading = (state: State): boolean =>
@@ -42,17 +44,22 @@ export const selectCurrentPokedexName = createSelector(
   currentPokedexName
 );
 
+export const selectCurrentPokedexPage = createSelector(
+  gameState,
+  currentPokedexPage
+);
+
 export const selectPokedexList = createSelector(
   gameState,
-  getPokedexLoading
+  pokedexList
 );
 
 export const selectGetPokedexListLoading = createSelector(
   gameState,
-  getPokedexFailure
+  getPokedexListLoading
 );
 
 export const selectGetPokedexListFailure = createSelector(
   gameState,
-  currentPokedexName
+  getPokedexListFailure
 );

@@ -4,6 +4,7 @@ import {
   getPokedexSuccess,
   getPokedexFailure,
   setCurrentPokedexName,
+  setCurrentPokedexPage,
   getPokedexList,
   getPokedexListSuccess,
   getPokedexListFailure,
@@ -33,6 +34,10 @@ export const gameReducer = createReducer(
   on(setCurrentPokedexName, (state, { pokedexName }) => ({ 
     ...state, 
     currentPokedexName: pokedexName
+  })),
+  on(setCurrentPokedexPage, (state, { page }) => ({ 
+    ...state, 
+    currentPokedexPage: page
   })),
   on(getPokedexList, state => ({ 
     ...state, 

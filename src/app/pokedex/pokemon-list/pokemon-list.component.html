@@ -2,7 +2,7 @@
     <section class="main-content">
         <div class="pokemon-list-wrapper">
             <div class="pokemon-list-title">
-                <h3>{{ (currentPokedex | async) | titlecase  }} Pokedex</h3>
+                <h3>{{ (currentPokedex$ | async) | titlecase  }} Pokedex</h3>
             </div>
             <div class="form w-100">
                 <div class="form-group d-flex w-100">
@@ -26,8 +26,8 @@
                 </div>
             </div>
             @if (pokedex$ | async; as pokedex) {
-                <div class="d-flex flex-wrap justify-space-between">
-                    @for (entry of pokedex.pokemon_entries; track entry; let i = $index) {
+                <div class="d-flex flex-wrap justify-space-between mb-4">
+                    @for (entry of displayedPokemon; track entry; let i = $index) {
                         <div class="d-flex flex-column text-center" [routerLink]="'/pokemon-detail/' + entry.pokemon_species.name">
                             <div class="transparent-overlay"></div>
                             <img [src]="'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + pokemonNationalDexNumber(entry) + '.png'" />
@@ -35,6 +35,15 @@
                         </div>
                     }
                 </div>
+                <ngb-pagination
+                    [collectionSize]="pokedex.pokemon_entries.length"
+                    [page]="(currentPokedexPage$ | async) || 1"
+                    [maxSize]="5"
+                    [rotate]="true"
+                    [ellipses]="false"
+                    [boundaryLinks]="true"
+                    (pageChange)="pageChanged($event)"
+                />
             }
         </div>
     </section>

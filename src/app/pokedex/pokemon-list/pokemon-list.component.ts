@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { GameSelectors, LocationSelectors } from '../../store';
+import { GameActions, GameSelectors, LocationSelectors } from '../../store';
 import { Observable, OperatorFunction, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
@@ -13,27 +13,38 @@ import { PokemonEntry } from 'pokenode-ts';
 })
 export class PokemonListComponent implements OnInit {
   public regions$ = this.store$.select(LocationSelectors.selectRegions);
-  public currentPokedex = this.store$.select(GameSelectors.selectCurrentPokedexName);
+  public currentPokedex$ = this.store$.select(GameSelectors.selectCurrentPokedexName);
   public pokedex$ = this.store$.select(GameSelectors.selectPokedex);
   public pokemonName = '';
   public allPokemon: string[] = [];
+  public currentPokedexPage$ = this.store$.select(GameSelectors.selectCurrentPokedexPage);
+  public page = 1;
+  public pageSize = 25;
+  public displayedPokemon: PokemonEntry[] = [];
+  public pokemonEntries: PokemonEntry[] = [];
 
   formatter = (result: string) => result.charAt(0).toUpperCase() + result.slice(1);
 
   constructor(
     private store$: Store, 
-    private router: Router, 
-  ) { }
+    private router: Router,
+  ) {
+    this.currentPokedexPage$.subscribe((currentPokedexPage) => {
+      this.page = currentPokedexPage;
+    });
+   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.pokedex$.subscribe(pokedex => {
       if (pokedex) {
         this.allPokemon = pokedex.pokemon_entries.map(pokemon => pokemon.pokemon_species.name);
+        this.pokemonEntries = pokedex.pokemon_entries;
+        this.displayPokemon();
       }
     });
   }
 
-  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
+  public search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
     return text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
@@ -43,11 +54,26 @@ export class PokemonListComponent implements OnInit {
     )
   }
 
-  searchPokemon(event: NgbTypeaheadSelectItemEvent): void {
+  public searchPokemon(event: NgbTypeaheadSelectItemEvent): void {
     this.router.navigateByUrl('/pokemon-detail/' + event.item);
   }
 
-  pokemonNationalDexNumber(entry: PokemonEntry): number {
+  public pageChanged(page: number): void {
+    this.store$.dispatch(GameActions.setCurrentPokedexPage({ page }));
+    this.displayPokemon();
+  }
+
+  public displayPokemon(): void {
+    this.displayedPokemon = 
+          this.pokemonEntries
+            .map(data => ({ ...data }))
+            .slice(
+              (this.page - 1) * this.pageSize,
+              (this.page - 1) * this.pageSize + this.pageSize
+            );
+  }
+
+  public pokemonNationalDexNumber(entry: PokemonEntry): number {
     return this.extractNumberFromUrl(entry.pokemon_species.url)
   }
 
