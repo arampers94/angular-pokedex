@@ -14,7 +14,7 @@ export enum GameActionTypes {
 
 export const getPokedex = createAction( 
   GameActionTypes.GET_POKEDEX_REQUEST,
-  props<{ id: number; region?: string }>()
+  props<{ region: string }>()
 );
 
 export const getPokedexSuccess = createAction( 

@@ -19,7 +19,7 @@ export class GameEffects {
       ofType(getPokedex),
       switchMap((action) => 
         this.gameService
-          .getPokedex(action.id, action.region)
+          .getPokedex(action.region)
           .pipe(
             map(pokedex => getPokedexSuccess({ pokedex })),
             catchError(error => of(getPokedexFailure(error)))

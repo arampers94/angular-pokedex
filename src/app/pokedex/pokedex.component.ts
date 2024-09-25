@@ -39,7 +39,7 @@ export class PokedexComponent implements OnInit {
       if (!initialFetchCompleted) {
         this.store$.dispatch(PokemonActions.getAllPokemon());
         this.store$.dispatch(LocationActions.getAllRegions());
-        this.store$.dispatch(GameActions.getPokedex({ id: 1 }));
+        this.store$.dispatch(GameActions.getPokedex({ region: 'national' }));
         this.store$.dispatch(PokemonActions.updateInitialFetchCompleted({ fetchCompleted: true }));
       }
     });

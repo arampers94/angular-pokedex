@@ -13,6 +13,8 @@ export class RegionPickerComponent implements OnInit {
   public regions$: Observable<NamedAPIResource[] | APIResource[]> = 
     this.store$.select(LocationSelectors.selectRegions);
 
+  private regionsWithVariants = ['johto', 'sinnoh', 'unova', 'alola'];
+
   constructor(private store$: Store) { }
 
   ngOnInit(): void {
@@ -24,7 +26,16 @@ export class RegionPickerComponent implements OnInit {
   }
 
   setCurrentPokedexName(pokedexName: string): void {
-    this.store$.dispatch(GameActions.setCurrentPokedexName({ pokedexName }))
-    this.store$.dispatch(GameActions.getPokedex({ id: 1, region: pokedexName }))
+    let newPokedexName = pokedexName;
+    this.store$.dispatch(GameActions.setCurrentPokedexName({ pokedexName }));
+    this.store$.dispatch(GameActions.setCurrentPokedexPage({ page: 1 }));
+    
+    if (this.regionsWithVariants.includes(pokedexName)) {
+      newPokedexName = `original-${pokedexName}`;
+    } else if (pokedexName === 'kalos') {
+      newPokedexName = 'kalos-central';
+    }
+
+    this.store$.dispatch(GameActions.getPokedex({ region: newPokedexName }));
   }
 }

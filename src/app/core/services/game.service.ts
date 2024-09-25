@@ -6,11 +6,9 @@ import { Observable, from } from "rxjs";
 export class GameService {
   private gameClient = new GameClient();
 
-  public getPokedex(id: number, region?: string): Observable<Pokedex> {
+  public getPokedex(region: string): Observable<Pokedex> {
     return from(
-      region ? 
-        this.gameClient.getPokedexByName(region) : 
-        this.gameClient.getPokedexById(id)
+      this.gameClient.getPokedexByName(region)
     );
   }
 

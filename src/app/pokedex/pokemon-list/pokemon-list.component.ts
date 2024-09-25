@@ -13,7 +13,7 @@ import { PokemonEntry } from 'pokenode-ts';
 })
 export class PokemonListComponent implements OnInit {
   public regions$ = this.store$.select(LocationSelectors.selectRegions);
-  public currentPokedex$ = this.store$.select(GameSelectors.selectCurrentPokedexName);
+  public currentPokedexName$ = this.store$.select(GameSelectors.selectCurrentPokedexName);
   public pokedex$ = this.store$.select(GameSelectors.selectPokedex);
   public pokemonName = '';
   public allPokemon: string[] = [];
